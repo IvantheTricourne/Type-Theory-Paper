@@ -1,0 +1,394 @@
+This is XeTeX, Version 3.14159265-2.6-0.99992 (TeX Live 2015) (preloaded format=xelatex 2015.5.24)  3 MAR 2016 17:06
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**less-than-proof.tex
+(./less-than-proof.tex
+LaTeX2e <2015/01/01>
+Babel <3.9l> and hyphenation patterns for 79 languages loaded.
+(/usr/local/texlive/2015/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2014/09/29 v1.4h Standard LaTeX document class
+(/usr/local/texlive/2015/texmf-dist/tex/latex/base/size12.clo
+File: size12.clo 2014/09/29 v1.4h Standard LaTeX file (size option)
+)
+\c@part=\count79
+\c@section=\count80
+\c@subsection=\count81
+\c@subsubsection=\count82
+\c@paragraph=\count83
+\c@subparagraph=\count84
+\c@figure=\count85
+\c@table=\count86
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+)
+(/usr/local/texlive/2015/texmf-dist/tex/latex/amsfonts/amssymb.sty
+Package: amssymb 2013/01/14 v3.01 AMS font symbols
+
+(/usr/local/texlive/2015/texmf-dist/tex/latex/amsfonts/amsfonts.sty
+Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
+\@emptytoks=\toks14
+\symAMSa=\mathgroup4
+\symAMSb=\mathgroup5
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
+))
+(/usr/local/texlive/2015/texmf-dist/tex/latex/bbm-macros/bbm.sty
+Package: bbm 1999/03/15 V 1.2 provides fonts for set symbols - TH
+LaTeX Font Info:    Overwriting math alphabet `\mathbbm' in version `bold'
+(Font)                  U/bbm/m/n --> U/bbm/bx/n on input line 33.
+LaTeX Font Info:    Overwriting math alphabet `\mathbbmss' in version `bold'
+(Font)                  U/bbmss/m/n --> U/bbmss/bx/n on input line 35.
+)
+(/usr/local/texlive/2015/texmf-dist/tex/generic/babel/babel.sty
+Package: babel 2014/09/25 3.9l The Babel package
+
+(/usr/local/texlive/2015/texmf-dist/tex/generic/babel-greek/greek.ldf
+Language: greek 2014/10/21 v1.9c Greek support for the babel system
+
+(/usr/local/texlive/2015/texmf-dist/tex/generic/babel/babel.def
+File: babel.def 2014/09/25 3.9l Babel common definitions
+\babel@savecnt=\count87
+\U@D=\dimen103
+
+(/usr/local/texlive/2015/texmf-dist/tex/generic/babel/xebabel.def))
+\bbl@monogreek=\count88
+\bbl@polygreek=\count89
+\bbl@ancientgreek=\count90
+
+(/usr/local/texlive/2015/texmf-dist/tex/latex/greek-fontenc/lgrenc.def
+File: lgrenc.def 2013/12/02 v0.11.2 LGR Greek font encoding definitions
+
+(/usr/local/texlive/2015/texmf-dist/tex/latex/greek-fontenc/greek-fontenc.def
+File: greek-fontenc.def 2014/12/12 v0.12 Common Greek font encoding definitions
+
+))) (/usr/local/texlive/2015/texmf-dist/tex/generic/babel-english/english.ldf
+Language: english 2012/08/20 v3.3p English support from the babel system
+\l@canadian = a dialect from \language\l@american 
+\l@australian = a dialect from \language\l@british 
+\l@newzealand = a dialect from \language\l@british 
+))
+(/usr/local/texlive/2015/texmf-dist/tex/latex/ucs/ucs.sty
+Package: ucs 2013/05/11 v2.2 UCS: Unicode input support
+
+(/usr/local/texlive/2015/texmf-dist/tex/latex/ucs/data/uni-global.def
+File: uni-global.def 2013/05/13 UCS: Unicode global data
+)
+\uc@secondtry=\count91
+\uc@combtoks=\toks15
+\uc@combtoksb=\toks16
+\uc@temptokena=\toks17
+)
+(/usr/local/texlive/2015/texmf-dist/tex/latex/base/inputenc.sty
+Package: inputenc 2015/03/17 v1.2c Input encoding file
+\inpenc@prehook=\toks18
+\inpenc@posthook=\toks19
+
+
+Package inputenc Warning: inputenc package ignored with utf8 based engines.
+
+) (/usr/local/texlive/2015/texmf-dist/tex/latex/ucs/utils/autofe.sty
+Package: autofe 2002/12/17 Automatic switching of fontencodings
+
+macro:->
+) (/usr/local/texlive/2015/texmf-dist/tex/latex/fancyvrb/fancyvrb.sty
+Package: fancyvrb 2008/02/07
+
+Style option: `fancyvrb' v2.7a, with DG/SPQR fixes, and firstline=lastline fix 
+<2008/02/07> (tvz)
+(/usr/local/texlive/2015/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
+\KV@toks@=\toks20
+)
+\FV@CodeLineNo=\count92
+\FV@InFile=\read1
+\FV@TabBox=\box26
+\c@FancyVerbLine=\count93
+\FV@StepNumber=\count94
+\FV@OutFile=\write3
+)
+No file less-than-proof.aux.
+\openout1 = `less-than-proof.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 37.
+LaTeX Font Info:    ... okay on input line 37.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 37.
+LaTeX Font Info:    ... okay on input line 37.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 37.
+LaTeX Font Info:    ... okay on input line 37.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 37.
+LaTeX Font Info:    ... okay on input line 37.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 37.
+LaTeX Font Info:    ... okay on input line 37.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 37.
+LaTeX Font Info:    ... okay on input line 37.
+LaTeX Font Info:    Checking defaults for LGR/cmr/m/n on input line 37.
+LaTeX Font Info:    Try loading font information for LGR+cmr on input line 37.
+(/usr/local/texlive/2015/texmf-dist/tex/latex/cbfonts-fd/lgrcmr.fd
+File: lgrcmr.fd 2013/09/01 v1.0 Greek European Computer Regular
+)
+LaTeX Font Info:    ... okay on input line 37.
+
+(/usr/local/texlive/2015/texmf-dist/tex/latex/ucs/ucsencs.def
+File: ucsencs.def 2011/01/21 Fixes to fontencodings LGR, T3
+LGR\textpentedeka already defined.
+LGR\textpenteqilioi already defined.
+LGR\textpentemuria already defined.
+LGR\textstigma already defined.
+LGR\textqoppa already defined.
+LGR\texteuro already defined.
+LGR\textperthousand already defined.
+LGR\textquoteleft already defined.
+LGR\textquoteright already defined.
+LGR\u already defined.
+LGR\= already defined.
+LGR\" already defined.
+LGR\textpercent already defined.
+LGR\textperiodcentered already defined.
+LGR\' already defined.
+LGR\textanoteleia already defined.
+LGR\textAlpha already defined.
+LGR\textBeta already defined.
+LGR\textDelta already defined.
+LGR\textEpsilon already defined.
+LGR\textPhi already defined.
+LGR\textGamma already defined.
+LGR\textEta already defined.
+LGR\textIota already defined.
+LGR\textTheta already defined.
+LGR\textKappa already defined.
+LGR\textLambda already defined.
+LGR\textMu already defined.
+LGR\textNu already defined.
+LGR\textOmicron already defined.
+LGR\textPi already defined.
+LGR\textChi already defined.
+LGR\textRho already defined.
+LGR\textSigma already defined.
+LGR\textTau already defined.
+LGR\textUpsilon already defined.
+LGR\textOmega already defined.
+LGR\textXi already defined.
+LGR\textPsi already defined.
+LGR\textZeta already defined.
+LGR\` already defined.
+LGR\textalpha already defined.
+LGR\textbeta already defined.
+LGR\textvarsigma already defined.
+LGR\textdelta already defined.
+LGR\textepsilon already defined.
+LGR\textphi already defined.
+LGR\textgamma already defined.
+LGR\texteta already defined.
+LGR\textiota already defined.
+LGR\texttheta already defined.
+LGR\textkappa already defined.
+LGR\textlambda already defined.
+LGR\textmu already defined.
+LGR\textnu already defined.
+LGR\textomicron already defined.
+LGR\textpi already defined.
+LGR\textchi already defined.
+LGR\textrho already defined.
+LGR\textautosigma already defined.
+LGR\textsigma already defined.
+LGR\texttau already defined.
+LGR\textupsilon already defined.
+LGR\textomega already defined.
+LGR\textxi already defined.
+LGR\textpsi already defined.
+LGR\textzeta already defined.
+LGR\guillemotleft already defined.
+LGR\guillemotright already defined.
+LGR\~ already defined.
+LGR\textemdash already defined.
+LGR\textdigamma already defined.
+LGR\textDigamma already defined.
+LGR\textdexiakeraia already defined.
+LGR\textaristerikeraia already defined.
+
+fontencoding LGR patched
+)
+LaTeX Font Info:    Try loading font information for U+msa on input line 38.
+ (/usr/local/texlive/2015/texmf-dist/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Try loading font information for U+msb on input line 38.
+
+(/usr/local/texlive/2015/texmf-dist/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+)
+Missing character: There is no ℕ in font cmtt12!
+Missing character: There is no ≡ in font cmtt12!
+Missing character: There is no ℕ in font cmtt12!
+Missing character: There is no → in font cmtt12!
+Missing character: There is no → in font cmtt12!
+Missing character: There is no ℕ in font cmtt12!
+Missing character: There is no → in font cmtt12!
+Missing character: There is no → in font cmtt12!
+Missing character: There is no → in font cmtt12!
+Missing character: There is no ℕ in font cmtt12!
+Missing character: There is no → in font cmtt12!
+Missing character: There is no ℕ in font cmtt12!
+Missing character: There is no ℕ in font cmtt12!
+Missing character: There is no ℕ in font cmtt12!
+Missing character: There is no ℕ in font cmtt12!
+Missing character: There is no ℕ in font cmtt12!
+Missing character: There is no → in font cmtt12!
+Missing character: There is no → in font cmtt12!
+Missing character: There is no → in font cmtt12!
+Missing character: There is no ℕ in font cmtt12!
+Missing character: There is no → in font cmtt12!
+Missing character: There is no → in font cmtt12!
+Missing character: There is no → in font cmtt12!
+Missing character: There is no ℕ in font cmtt12!
+Missing character: There is no → in font cmtt12!
+Missing character: There is no ℕ in font cmtt12!
+Missing character: There is no ℕ in font cmtt12!
+Missing character: There is no ℕ in font cmtt12!
+Missing character: There is no ℕ in font cmtt12!
+Missing character: There is no → in font cmtt12!
+Missing character: There is no ℕ in font cmtt12!
+Missing character: There is no → in font cmtt12!
+Missing character: There is no ℕ in font cmtt12!
+Missing character: There is no ℕ in font cmtt12!
+Missing character: There is no ℕ in font cmtt12!
+Missing character: There is no → in font cmtt12!
+Missing character: There is no ℕ in font cmtt12!
+Missing character: There is no λ in font cmtt12!
+Missing character: There is no → in font cmtt12!
+Missing character: There is no λ in font cmtt12!
+Missing character: There is no → in font cmtt12!
+Missing character: There is no ¬ in font cmtt12!
+Missing character: There is no → in font cmtt12!
+Missing character: There is no ¬ in font cmtt12!
+Missing character: There is no → in font cmtt12!
+Missing character: There is no ⊥ in font cmtt12!
+Missing character: There is no ≤ in font cmtt12!
+Missing character: There is no ℕ in font cmtt12!
+Missing character: There is no → in font cmtt12!
+Missing character: There is no ≤ in font cmtt12!
+Missing character: There is no 𝞢 in font cmtt12!
+Missing character: There is no ∈ in font cmtt12!
+Missing character: There is no ℕ in font cmtt12!
+Missing character: There is no ≡ in font cmtt12!
+ [1
+
+]
+Missing character: There is no ℕ in font cmtt12!
+Missing character: There is no → in font cmtt12!
+Missing character: There is no ≤ in font cmtt12!
+Missing character: There is no × in font cmtt12!
+Missing character: There is no ¬ in font cmtt12!
+Missing character: There is no ≡ in font cmtt12!
+Missing character: There is no ≠ in font cmtt12!
+Missing character: There is no ℕ in font cmtt12!
+Missing character: There is no → in font cmtt12!
+Missing character: There is no ¬ in font cmtt12!
+Missing character: There is no ≡ in font cmtt12!
+Missing character: There is no ≠ in font cmtt12!
+Missing character: There is no λ in font cmtt12!
+Missing character: There is no ≤ in font cmtt12!
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 80.
+
+(/usr/local/texlive/2015/texmf-dist/tex/latex/base/omscmr.fd
+File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 80.
+Missing character: There is no ≤ in font cmtt12!
+Missing character: There is no ≤ in font cmtt12!
+Missing character: There is no ≠ in font cmtt12!
+Missing character: There is no ≤ in font cmtt12!
+Missing character: There is no ≠ in font cmtt12!
+Missing character: There is no λ in font cmtt12!
+Missing character: There is no ≡ in font cmtt12!
+Missing character: There is no ℕ in font cmtt12!
+Missing character: There is no → in font cmtt12!
+Missing character: There is no ℕ in font cmtt12!
+LaTeX Font Info:    Try loading font information for OMS+cmtt on input line 107
+.
+LaTeX Font Info:    No file OMScmtt.fd. on input line 107.
+
+
+LaTeX Font Warning: Font shape `OMS/cmtt/m/n' undefined
+(Font)              using `OMS/cmsy/m/n' instead
+(Font)              for symbol `textbraceleft' on input line 107.
+
+Missing character: There is no ℕ in font cmtt12!
+Missing character: There is no → in font cmtt12!
+Missing character: There is no ℕ in font cmtt12!
+[2]
+Missing character: There is no ℕ in font cmtt12!
+Missing character: There is no → in font cmtt12!
+Missing character: There is no ℕ in font cmtt12!
+Missing character: There is no → in font cmtt12!
+Missing character: There is no → in font cmtt12!
+Missing character: There is no ℕ in font cmtt12!
+Missing character: There is no → in font cmtt12!
+Missing character: There is no ℕ in font cmtt12!
+Missing character: There is no λ in font cmtt12!
+Missing character: There is no → in font cmtt12!
+Missing character: There is no ℕ in font cmtt12!
+Missing character: There is no → in font cmtt12!
+Missing character: There is no → in font cmtt12!
+Missing character: There is no ≤ in font cmtt12!
+Missing character: There is no ¬ in font cmtt12!
+Missing character: There is no ≡ in font cmtt12!
+Missing character: There is no ℕ in font cmtt12!
+Missing character: There is no → in font cmtt12!
+Missing character: There is no ℕ in font cmtt12!
+Missing character: There is no λ in font cmtt12!
+Missing character: There is no → in font cmtt12!
+Missing character: There is no ≤ in font cmtt12!
+Missing character: There is no ¬ in font cmtt12!
+Missing character: There is no ≡ in font cmtt12!
+Missing character: There is no ℕ in font cmtt12!
+Missing character: There is no → in font cmtt12!
+Missing character: There is no → in font cmtt12!
+Missing character: There is no ≠ in font cmtt12!
+Missing character: There is no ¬ in font cmtt12!
+Missing character: There is no ≡ in font cmtt12!
+Missing character: There is no ℕ in font cmtt12!
+Missing character: There is no → in font cmtt12!
+Missing character: There is no ℕ in font cmtt12!
+Missing character: There is no λ in font cmtt12!
+Missing character: There is no → in font cmtt12!
+ [3]
+Missing character: There is no ≠ in font cmtt12!
+Missing character: There is no ℕ in font cmtt12!
+Missing character: There is no → in font cmtt12!
+Missing character: There is no → in font cmtt12!
+Missing character: There is no ℕ in font cmtt12!
+Missing character: There is no → in font cmtt12!
+Missing character: There is no ℕ in font cmtt12!
+Missing character: There is no λ in font cmtt12!
+Missing character: There is no → in font cmtt12!
+Missing character: There is no ≠ in font cmtt12!
+Missing character: There is no λ in font cmtt12!
+Missing character: There is no → in font cmtt12!
+Missing character: There is no ℕ in font cmtt12!
+Missing character: There is no → in font cmtt12!
+Missing character: There is no ℕ in font cmtt12!
+Missing character: There is no λ in font cmtt12!
+Missing character: There is no → in font cmtt12!
+Missing character: There is no ≠ in font cmtt12!
+Missing character: There is no λ in font cmtt12!
+Missing character: There is no → in font cmtt12!
+Missing character: There is no ≠ in font cmtt12!
+ [4] (./less-than-proof.aux)
+
+LaTeX Font Warning: Some font shapes were not available, defaults substituted.
+
+ ) 
+Here is how much of TeX's memory you used:
+ 2697 strings out of 493706
+ 44711 string characters out of 6145769
+ 90756 words of memory out of 5000000
+ 6040 multiletter control sequences out of 15000+600000
+ 7868 words of font info for 31 fonts, out of 8000000 for 9000
+ 1328 hyphenation exceptions out of 8191
+ 25i,6n,26p,470b,260s stack positions out of 5000i,500n,10000p,200000b,80000s
+
+Output written on less-than-proof.pdf (4 pages).

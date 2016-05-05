@@ -1,0 +1,185 @@
+\title{Martin-L\"of Type Theory: Example proof}
+\author{Carl Factora}
+\date{\today}
+
+\documentclass[12pt]{article}
+% The following packages are needed because unicode
+% is translated (using the next set of packages) to
+% latex commands. You may need more packages if you
+% use more unicode characters:
+\usepackage{amssymb}
+\usepackage{bbm}
+\usepackage[greek,english]{babel}
+% This handles the translation of unicode to latex:
+\usepackage{ucs}
+\usepackage[utf8x]{inputenc}
+\usepackage{autofe}
+
+% Some characters that are not automatically defined
+% (you figure out by the latex compilation errors you get),
+% and you need to define:
+\DeclareUnicodeCharacter{8988}{\ensuremath{\ulcorner}}
+\DeclareUnicodeCharacter{8989}{\ensuremath{\urcorner}}
+\DeclareUnicodeCharacter{8803}{\ensuremath{\overline{\equiv}}}
+\DeclareUnicodeCharacter{120738}{\ensuremath{\Sigma}}
+\DeclareUnicodeCharacter{955}{\ensuremath{\lambda}}
+
+% Add more as you need them (shouldn’t happen often).
+% Using “\newenvironment” to redefine verbatim to
+% be called “code” doesn’t always work properly. 
+% You can more reliably use:
+\usepackage{fancyvrb}
+
+\DefineVerbatimEnvironment
+  {code}{Verbatim}
+  {} % Add fancy options here if you like.
+
+\begin{document}
+\maketitle
+
+\section*{Preliminary definitions}
+
+\begin{code}
+  open import Data.Nat using (ℕ; suc)
+  open import Relation.Binary.PropositionalEquality
+    using (_≡_; refl; cong; sym; trans)
+  open import Data.Product
+  open import Data.Empty
+
+  -- Natural Number Recursion and Induction principle
+  recℕ : (C : Set) → C → (ℕ → C → C) → ℕ → C
+  recℕ C c f 0 = c
+  recℕ C c f (suc n) = f n (recℕ C c f n)
+
+  indℕ : (C : ℕ → Set) → C 0 → ((n : ℕ) → C n → C (suc n)) →
+         (n : ℕ) → C n
+  indℕ C c f zero = c
+  indℕ C c f (suc n) = f n (indℕ C c f n)
+
+  -- Addition
+  add : ℕ → ℕ → ℕ
+  add = recℕ (ℕ → ℕ) (λ n → n) (λ m r n → suc (r n))
+\end{code}
+We also define the following propositions:
+\begin{code}
+  ¬ : Set → Set
+  ¬ A = A → ⊥
+
+  _≤_ : (i j : ℕ) → Set
+  i ≤ j = 𝞢[ k ∈ ℕ ] (add i k ≡ j)
+
+  _<_ : (i j : ℕ) → Set
+  i < j = (i ≤ j) × ¬ (i ≡ j)
+
+  0≠si : (i : ℕ) → ¬ (0 ≡ suc i)
+  0≠si i = λ ()
+
+\end{code}
+Here, we define {\tt ≤} and {\tt <} as:
+\begin{itemize}
+\item {\tt i ≤ j} is provable if and only if there exists a {\tt k} such that
+  {\tt i + k = j}.
+\item {\tt i < j} is provable if and only if we can provide a proof that
+  {\tt i ≤ j} and that {\tt i ≠ j}.
+\end{itemize}
+Thus, both propositions are proven by constructing by pairs. The proof for
+{\tt i ≤ j} must be a dependent pair since its corresponding proposition
+uses a specific natural number (viz. {\tt k}).
+
+{\tt 0≠si} is a proof that 0 is never equal to the successor of a natural
+number. Here, we write {\tt λ ()} since the second assumption of the proof,
+{\tt 0 ≡ suc i}, allows us to simply appeal to the fact that it is absurd to say
+that 0 is equal to any natural number {\tt + 1}, by definition of the natural
+numbers and the fact that Agda assumes that terms that are constructed
+differently (i.e., 0 and {\tt suc} for natural numbers) can never be equal.
+
+\section*{The Proof}
+Using the above, we can prove the following:
+\begin{code}
+  0< : (i : ℕ) → (0 < suc i)
+  0< = ?
+\end{code}
+The proof of this proposition requires that we prove that 0 is less than all
+natural numbers. We do this using induction. More specifically, this proof
+requires us to perform induction on a natural number, {\tt i}. To do
+this, we use the {\tt indℕ} principle defined above. For each step of our proof,
+we also provide the corresponding proof environment (viz. {\tt Proof Environment})
+that represents the given proof obligation for each hole (viz. {\tt \{ \}}).
+\begin{code}
+0< : (i : ℕ) → (0 < suc i)
+0< = indℕ { }0 { }1 { }2
+
+{---Proof Environment
+  ?0 : ℕ → Set
+  ?1 : 0 < suc 0
+  ?2 : (n : ℕ) → 0 < suc n → 0 < suc (suc n)
+-}
+\end{code}
+The first of these obligations (i.e., {\tt ?0}) requires us to declare the
+proposition we are wanting to prove. In general, this simply mirrors the proofs
+type definition.
+\begin{code}
+0< : (i : ℕ) → (0 < suc i)
+0< = indℕ (λ i → 0 < suc i) { }1 { }2
+
+{---Proof Environment
+  ?1 : 0 < suc 0
+  ?2 : (n : ℕ) → 0 < suc n → 0 < suc (suc n)
+-}
+\end{code}
+Our next obligation requires us to prove the proposition in the case that
+\mbox{{\tt i = 0}} (i.e., we must show that {\tt 0 < suc 0}). Given our
+definition of {\tt <}, the proof this by constructing a pair, containing proofs
+of \mbox{{\tt 0 ≤ suc 0}} and \mbox{{\tt ¬ (0 ≡ suc 0)}}.
+
+\begin{code}
+0< : (i : ℕ) → (0 < suc i)
+0< = indℕ (λ i → 0 < suc i)
+          ({ }0 , { }1)
+          { }2
+  
+{---Proof Environment
+  ?0 : 0 ≤ suc 0
+  ?1 : ¬ (0 ≡ suc 0)
+  ?2 : (n : ℕ) → 0 < suc n → 0 < suc (suc n)
+-}
+\end{code}
+To prove {\tt ?0}, we must construct a dependent pair that contains a natural
+number {\tt k}, such that {\tt 0 + k = 1}. Thus, we construct a pair containing
+the natural number 1 and as well as the proof that {\tt 1 = 1} (e.g. {\tt refl}).
+To prove {\tt ?1}, we use our proof of {\tt 0≠si} on 0 to prove that
+{\tt ¬ (0 ≡ suc 0)}.
+\begin{code}
+0< : (i : ℕ) → (0 < suc i)
+0< = indℕ (λ i → 0 < suc i)
+          ((1 , refl) , 0≠si 0)
+          { }2
+  
+{---Proof Environment
+  ?2 : (n : ℕ) → 0 < suc n → 0 < suc (suc n)
+-}
+\end{code}
+To prove the final proposition, we must prove that for all natural numbers, {\tt n},
+with the assumption that 0 is less than {\tt suc n}, we can show that 0 is less
+than {\tt suc (suc n)} (i.e., {\tt n + 2}). 
+\begin{code}
+0< : (i : ℕ) → (0 < suc i)
+0< = indℕ (λ i → 0 < suc i)
+          ((1 , refl) , 0≠si 0)
+          (λ n ih → { }0)
+
+{---Proof Environment
+  ?0 : 0 < suc (suc n)
+-}
+\end{code}
+In this case, our inductive hypothesis, {\tt ih}, is actually not necessary,
+since we can simply employ the same strategy as in the earlier proof for the
+base-case.
+\begin{code}
+  0< : (i : ℕ) → (0 < suc i)
+  0< = indℕ (λ i → 0 < suc i)
+            ((1 , refl) , 0≠si 0)
+            (λ n _ → ((suc (suc n)) , refl) , 0≠si (suc n))
+
+\end{code}
+\end{document}

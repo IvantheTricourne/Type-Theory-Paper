@@ -26,6 +26,7 @@
 \DeclareUnicodeCharacter{8803}{\ensuremath{\overline{\equiv}}}
 \DeclareUnicodeCharacter{120738}{\ensuremath{\Sigma}}
 \DeclareUnicodeCharacter{955}{\ensuremath{\lambda}}
+\DeclareUnicodeCharacter{2261}{\ensuremath{\equiv}}
 
 % Add more as you need them (shouldn’t happen often).
 % Using “\newenvironment” to redefine verbatim to
@@ -422,18 +423,16 @@ position on the cube.
 \section{Martin-L\"of Type Theory}
 %% Curry-Howard?
 In this section, we introduce the foundational concepts of Martin-L\"of Type
-Theory. We discuss recursion, induction, and as well several primitive type
-encodings (e.g. from propositional logic). We recommend the reader to have a
-running proof assistant while reading this section to help fortify (better word)
-several concepts.
+Theory \cite{}. We discuss recursion, induction, and as well several primitive type
+encodings (e.g. from propositional logic).
 
 \subsection*{Principles}
 Recursion and induction are one of the powerful tools available in a
 fully-dependently typed system. Using recursion and induction principles to
 define functions and proofs, we are guaranteed termination and totality. This is
 because, in general, recursion and induction principles are defined under certain
-known intuitions on the given type that they are meant to act on and thus also
-follow a certain pattern.
+known intuitions (we can think of them as axioms) on the given type that they are
+meant to act on. They also follow a certain pattern:
 \begin{center}
 \begin{minipage}{0.9\textwidth}
 \begin{code}
@@ -444,7 +443,6 @@ indT : (C : T → Set) → (C₀ : ...) ... → (t : T) → C t
 
 \begin{minipage}{0.7\textwidth}
 \begin{small}
-
 The recursion and induction principles for some type {\tt T}.
 \end{small}
 \end{minipage}
@@ -468,14 +466,94 @@ multiplication. For the latter, we use the names {\tt plus} and {\tt times}.
 
 \subsection*{Primitive Type Encodings}
 %% Bottom, Top, Disjunction, Conjunction, Sigma
+We start with \(\perp\), the empty type. We include the definition of \(\perp\),
+{\tt rec⊥} and {\tt ind⊥}:
+
+
 
 \section{Example Types and Sample Proofs}
 Describe the section.
 
 \subsection*{Booleans}
+\begin{center}
+\begin{minipage}{0.9\textwidth}
+\begin{code}
+data 𝔹 : Set where
+  True  : 𝔹
+  False : 𝔹
+
+rec𝔹 : (C : Set) → C → C → 𝔹 → C
+rec𝔹 C t f True = t
+rec𝔹 C t f False = f
+
+ind𝔹 : (C : 𝔹 → Set) → C True → C False → (x : 𝔹) → C x
+ind𝔹 C t f True = t
+ind𝔹 C t f False = f
+\end{code}
+\end{minipage}
+\end{center}
+
 \subsection*{Natural Numbers}
+\begin{center}
+\begin{minipage}{0.9\textwidth}
+\begin{code}
+recℕ : (C : Set) → C → (ℕ → C → C) → ℕ → C
+recℕ C c _ 0 = c
+recℕ C c f (suc n) = f n (recℕ C c f n) 
+
+indℕ : (C : ℕ → Set) → C 0 →
+       (∀ (x : ℕ) → C x → C (suc x)) →
+       (x : ℕ) → C x
+indℕ C c _ 0 = c
+indℕ C c f (suc n) = f n (indℕ C c f n)
+\end{code}
+\end{minipage}
+\end{center}
+
 \subsection*{List/Orderings}
+\begin{center}
+\begin{minipage}{0.9\textwidth}
+\begin{code}
+data List (A : Set) : Set where
+  Nil  : List A
+  _::_ : A → List A → List A
+
+recList : {A : Set} → (C : Set) → C →
+          (A → List A → C → C) → List A → C
+recList C c f Nil = c
+recList C c f (x :: xs) = f x xs (recList C c f xs)
+
+indList : {A : Set} → (C : List A → Set) → C Nil →
+          ((x : A) → (xs : List A) → C xs → C (x :: xs)) →
+          (xs : List A) → C xs
+indList C c f Nil = c
+indList C c f (x :: xs) = f x xs (indList C c f xs)
+\end{code}
+\end{minipage}
+\end{center}
+
 \subsection*{Identity Types}
+\begin{center}
+\begin{minipage}{0.9\textwidth}
+\begin{code}
+infix  4  _≡_     -- propositional equality
+
+data _≡_ {ℓ} {A : Set ℓ} : (a b : A) → Set ℓ where
+  refl : (a : A) → (a ≡ a)
+
+ind≡ : {A : Set} (C : {x y : A} → x ≡ y → Set) →
+       (∀ (x : A) → C (refl x)) →
+       {x y : A} (p : x ≡ y) → C p
+ind≡ C c (refl x) = c x       
+
+rec≡ : {A : Set} {x y : A} (C : A → Set) → (p : x ≡ y) → C x → C y
+rec≡ {A} {x} {y} C = 
+  ind≡ (λ {x} {y} _ → C x → C y)
+       (λ x → λ z → z)
+       {x} {y} 
+\end{code}
+\end{minipage}
+\end{center}
 
 \section{Discussion}
 Say a few things about the paper.

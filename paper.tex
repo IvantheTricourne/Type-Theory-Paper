@@ -40,12 +40,25 @@
 \begin{document}
 \maketitle
 
-\begin{abstract}
-  Who knows.
-\end{abstract}
+%% \begin{abstract}
+%% \end{abstract}
 
 \section{Introduction}
-Introduce the contents of the paper, notation, talk about Agda.
+We present an introduction to dependent types and fundamental type theory.
+At its core, type theory seeks to serve as a possible foundation of mathematics,
+which itself is based on a different logical foundation. This proof-relevant
+form of mathematics is the basis in which types can be used to model logical
+propositions and is the core idea of type theory. As such, not only does type
+theory have a viable application in mathematics but also in computer science,
+providing a richer world of types and expressibility.
+
+The study of type theory goes hand in hand with the study of dependent types,
+which is the reason why first take the time to do so in Section 2. After we
+have derived a proper foundation for type theory, we then continue with the
+foundational concepts of Martin-L\"of type theory. We recommend using a proof
+assistant while working and studying with the examples we provide. For such
+examples, we use Agda notation.
+
 
 \section{Dependent Types}
 In this section, we introduce the concept of dependent types and their role in
@@ -60,10 +73,10 @@ each other. Altogether, there are four different kinds of dependencies:
 \item types depending on types
 \item types depending on terms
 \end{enumerate}
-These dependecies, however, should not be confused with an actual dependent type.
-In fact, only (2) and (4) correspond to expressions that are typed (necessarily)
-with a dependent type (we explain later why (1) and (3) are not typed with
-dependent types).
+These dependecies, however, should not be confused with an actual dependent
+type. In fact, only (2) and (4) correspond to expressions that are typed
+(necessarily) with a dependent type (we explain later why (1) and (3) are
+not typed with dependent types).
 
 What follows is a brief description of each form of dependency and the
 corresponding \(\lambda\)-calculus that is associated with it. With this, we
@@ -85,14 +98,20 @@ t || t → t
 \end{code}
 \end{minipage}
 \end{center}
-The terms of the STLC are simply the terms of the \textit{untyped \(\lambda\)-calculus},
+The terms of the STLC are the terms of the \textit{untyped \(\lambda\)-calculus},
 with the exception of terms that use \textit{self-application} (i.e., Y
 combinator, Omega, etc.). This has the benefit of removing all \textit{infinite}
-calculations from the system but also removing all recursive computations. Thus,
-the STLC is not \textit{Turing complete} and is thus the appropriate foundation
-for deriving a type theoretic system. It must first, however, be extended with
-more expressive types, as the only form of dependency present in the STLC is (1),
-terms depending on terms (i.e. {\em term level} \(\lambda\)-abstraction).
+calculations from the system but also removing all recursive computations \cite{}.
+Thus, the STLC is not \textit{Turing complete} and is thus the appropriate
+foundation for deriving a type theoretic system. This is because the STLC lends
+itself quite seamlessly as component of a larger, more expressive system. This
+flexibility is what we exploit to derive \(\lambda C\). To do this, we first
+extend the STLC with more expressive types through simple extentions on its
+grammar for simple types.
+
+%% as the only form of dependency
+%% present in the STLC is (1), terms depending on terms (i.e. {\em term level}
+%% \(\lambda\)-abstraction).
 
 The key difference between the STLC and \(\lambda C\) are the places in which
 terms and types are allowed to be. In the STLC, terms and types are entirely
@@ -100,7 +119,7 @@ seperate entities in that terms only exist on {\em term level} and types
 on {\em type level}. Thus, as we mentioned earlier, this puts a constraint
 on the system to only allow \(\lambda\)-abstraction to happen at term level
 (viz. definition of simple type). For example, the \textit{constant function}
-over types \(\mathbb{N}\) and \(\mathbb{B}\) in the STLC looks like:
+over types \(\mathbb{N}\) and \(\mathbb{B}\) in the STLC is defined:
 \begin{center}
 \begin{minipage}{0.5\textwidth}
 \begin{code}
@@ -118,7 +137,7 @@ method in which the STLC can be extended into \(\lambda C\).
 \subsection*{Second-Order (\(\lambda2\))}
 \subsubsection*{Role: Addition of polymorphic functions}
 
-Another name for \(\lambda2\) is System F. For our purposes, we treat
+Another name for \(\lambda2\) is System F \cite{}. For our purposes, we treat
 \(\lambda2\) as simply an extension of the STLC. This system is adds
 {\em polymorphic} terms to the STLC (viz. Dependency (2)). For example,
 let's take the definition of {\tt const} above and change it to define
@@ -145,7 +164,8 @@ of type and term. With \(\lambda2\), we are now allowed to pass types as argumen
 at term level (viz. we pass the actual types \(\mathbb{N}\) and \(\mathbb{B}\)).
 It is, however, necessary to constrain this expressivity with a more expressive
 type (e.g. {\tt (x : A) → ...}). Types that appear in this fashion are
-called \(\Pi\)-types. This leads us to a new grammar for types ({\tt t}):
+called \(\Pi\)-types. Taking the grammar for simple types, we can add \(\Pi\)-types,
+resulting in the grammar for types ({\tt t}) in \(\lambda2\):
 
 \begin{center}
 \begin{minipage}{0.5\textwidth}
@@ -174,7 +194,7 @@ and {\tt B}. In a sense, a \(\Pi\)-type binds values for types just as
 
 \(\Pi\)-types are actually significantly more expressive than the ones in
 \(\lambda2\). In \(\lambda2\), they are constrained to be only parameterized
-over other types (e.g. {\tt t} in {\tt ∀ (x : Set) → t}). In a later system, we
+over other types (e.g. {\tt Set} in {\tt ∀ (x : Set) → t}). In a later system, we
 allow \(\Pi\)-types to be parameterized over terms (e.g. {\tt ∀ (x : t) → t}).
 
 So far, we've seen how terms can depend on other terms (STLC) and how terms can
@@ -192,7 +212,7 @@ following transition:
 
 \begin{center}
 \begin{minipage}{0.4\textwidth}
-STLC \(\rightarrow\) \(\lambda2\) \(\rightarrow\) \(\lambda\underline{\omega}\) \(\rightarrow\) \(\lambda\omega\)
+STLC \(\rightarrow\) \(\lambda2\) \(\rightarrow\) (+\(\lambda\underline{\omega}\)) \(\rightarrow\) \(\lambda\omega\)
 \end{minipage}
 \end{center}
 
@@ -203,12 +223,12 @@ component, another name for this system is System F\(\omega\). Before we introdu
 the new grammar for types, we first introduce the concept of {\em levels}.
 
 We are already familiar with the first two levels, terms and types, which, from
-the STLC, are still related in terms of inhabitance. To meet the constraints of
-the STLC when introducing type constructors to our system, we must also provide
-the type of types. For our purposes, we assume an infinite universe of types, as
-is common practice in deriving type theoretic systems to avoid certain paradoxes.
-For example, let's first assume that natural numbers are primitive within our
-system. We then have the following for the natural number 42:
+the STLC, are related in terms of inhabitance. To introduce the third level and
+onward, we must also provide the type of types. For our purposes, we assume an
+infinite universe of types, as is common practice in deriving type theoretic
+systems to avoid certain paradoxes \cite{}. For example, let's first assume that
+natural numbers are primitive within our system. We then have the following for
+the natural number 42:
 
 \begin{center}
 \begin{minipage}{0.4\textwidth}
@@ -218,15 +238,11 @@ system. We then have the following for the natural number 42:
 \end{minipage}
 \end{center}
 
-Another name for {\tt Set} is a {\em kind}. For our puroses, we use the
-more familiar set-theoretic equivalent reading. Reading the above example is rather
-straightforward: 42 is of type \(\mathbb{N}\) which is of type {\tt Set}
-which of type {\tt Set₁} and so on. There is, however, an important distinction
-for the first two levels: 42 is NOT of type {\tt Set}, while \(\mathbb{N}\) is
-both of type {\tt Set} and {\tt Set₁}. Terms are therefore treated uniquely,
-since they only exist as elements of types. While important, this topic is a bit
-out of the scope of an introductory paper, however, we briefly discuss this
-in a later section.
+We read the above example as: 42 is of type \(\mathbb{N}\) which is of type
+{\tt Set} which of type {\tt Set₁} and so on. There is, however, an important
+distinction for the first two levels: 42 is NOT of type {\tt Set}, while
+\(\mathbb{N}\) is both of type {\tt Set}, {\tt Set₁} and onwards. Terms are
+therefore treated uniquely, since they only exist as elements of types.
 
 We can now revise the definition of types ({\tt t}) to include all instances of
 {\tt Set} in our infinite universe. We notate this as {\tt Set} below:
@@ -241,7 +257,7 @@ t || t → t || ∀ (x : Set) → t || Set
 
 The curious effect of doing this allows us to construct expressions of type
 {\tt t → t}, where either {\tt t} can have subexpressions containing {\tt Set}.
-Let's take a familiar definition of the list data structure:
+Let's take the familiar definition of the list data structure:
 
 \begin{center}
 \begin{minipage}{0.65\textwidth}
@@ -258,12 +274,13 @@ We discuss {\tt List} more in depth in a later section. For now, we simply ask
 look at the first line of the definition above (viz. {\tt List (A : Set) : Set}).
 From this line, we can see that {\tt List} is a type parameterized over any type
 {\tt A}. Another way to think about this statement is to think of {\tt List} as
-a form of polymorphic function of type {\tt Set → Set}, as is similar to other
-{\em parameterized types}, that can be applied at type level (thus the name
-{\em type constructor}). This is to insure that we cannot have create type
-expressions that fail to instantiate {\tt List} (i.e., {\tt List → A}).
+a form of polymorphic function of type {\tt Set → Set}, as is similar with other
+{\em parameterized types}. Unlike like {\tt const} or {\tt polyConst}, this
+function can only be applied at type level (thus the name {\em type constructor}).
+This is to insure that we cannot write type expressions that fail to instantiate
+{\tt List} (e.g. {\tt List → A} v. {\tt List A → A}).
 
-From this we can see that the simple addition of {\tt Set} into our grammar of
+From this we can see that the addition of {\tt Set} into our grammar of
 types has great effect on the expressivity of our system. There is only one
 other extension necessary to consider our system fully-dependently typed, which,
 similar to our treatment of \(\lambda\underline{\omega}\) is also deceptively
@@ -275,14 +292,15 @@ simple.
 To review, if we compile all the previously mentioned systems above, we have
 the system \(\lambda\omega\) (System F\(\omega\)). Our final addition, the
 system of \(\lambda P\), allows us to construct {\em type families} which are
-meant to directly correspond to propositions in higher-order logic.
+types themselves and are meant to directly correspond to propositions in
+higher-order logic.
 
 Let's take a simple example. Let's define a proposition {\tt isEven} that takes
 a natural number. Another way to say this is that {\tt isEven} is a predicate
-over natural numbers. When writing propositions, we write them as the equivalent
+over natural numbers. When writing propositions, we write them as their equivalent
 type definition (similar to {\tt List}). Consequently, the proposition
 {\tt isEven} is an example of a dependent type, since its {\em meaning} depends
-on the natural number passed to it.
+on the natural number passed to it (types depending on terms).
 
 \begin{center}
 \begin{minipage}{0.7\textwidth}
@@ -294,16 +312,15 @@ data _isEven : ℕ → Set where
 \end{minipage}
 \end{center}
 
-This is the last form of dependency of the four we mentioned earlier. Here,
-we've defined two ways in which {\tt n isEven} for all natural numbers
-({\tt n}) can be proven ``true'', which is done via its two type constructors
-{\tt ZEven} and {\tt NEven}, corresponding to the two constructors of
-\(\mathbb{N}\). {\tt ZEven} corresponds to the proof that 0 is an even number.
-{\tt NEven} then defines the property that if a given natural number ({\tt n}) is
-even (viz. {\tt n isEven}), then {\tt n + 2} is even (viz. {\tt (Suc (Suc n))
-isEven}). To clarify how this type can be used, let's prove that 4 is even. We
-start by providing the appropriate type definition and also providing a name for
-our proof (viz. {\tt 4isEven}):
+Here, we've defined two ways in which {\tt n isEven} for all natural numbers
+({\tt n}) can be proven. Returning to the idea of proof-relevant mathematics,
+we do this by use of its two type constructors {\tt ZEven} and {\tt NEven},
+corresponding to the two constructors of \(\mathbb{N}\). {\tt ZEven} is the
+proof that 0 is an even number. {\tt NEven} then defines the property that if
+a given natural number ({\tt n}) is even (viz. {\tt n isEven}), then {\tt n + 2}
+is even (viz. {\tt (Suc (Suc n)) isEven}). To clarify how this type can be used,
+let's prove that 4 is even. We start by providing the appropriate type definition
+and also providing a name for our proof (viz. {\tt 4isEven}):
 \begin{center}
 \begin{minipage}{0.5\textwidth}
 \begin{code}
@@ -311,12 +328,10 @@ our proof (viz. {\tt 4isEven}):
 \end{code}
 \end{minipage}
 \end{center}
-We must then show that 4 is indeed even using a combination of {\tt ZEven} and
-{\tt NEven}. From the definition of {\tt isEven}, we know that to prove 4 is
-even, we must know that 2 is even.  Consequently, to prove 2 is even, we must
-know that 0 is even. Fortunately, we have a proof that 0 is even: {\tt ZEven}.
-Thus, the proof that 2 is even is {\tt NEven 0 ZEven}, and finally the proof
-that 4 is even is:
+From the definition of {\tt isEven}, we know that to prove 4 is even, we must
+know that 2 is even. Consequently, to prove 2 is even, we must know that 0 is
+even. Fortunately, we have a proof that 0 is even: {\tt ZEven}. Thus, the proof
+that 2 is even is {\tt NEven 0 ZEven}, and finally the proof that 4 is even is:
 \begin{center}
 \begin{minipage}{0.5\textwidth}
 \begin{code}
@@ -326,12 +341,12 @@ that 4 is even is:
 \end{minipage}
 \end{center}
 
-This method of proof is adopted from {\em Intuitionistic Logic}. In this form of
-logic, ``truth'' corresponds to the idea of {\em type inhabitability}. This
-makes sense since we use define types to correspond to logical propositions
-(e.g. {\tt isEven}). ``Falsity'' then naturally corresponds to un-inhabitability
+This method of proof is adopted from {\em Intuitionistic Logic} \cite{}. In
+this form of logic, ``truth'' corresponds to the idea of {\em type inhabitability}.
+This makes sense since we use types to correspond to logical propositions
+(e.g. {\tt isEven}). ``Falsity'' then naturally corresponds to the un-inhabitability
 of a given type. This can be seen if we try to prove that 5 is even using
-{\tt isEven}. The proof seems to get ``stuck.''
+{\tt isEven}. The proof seems to get ``stuck'' at trying to prove that 1 is even.
 
 While it might seem intuitive and more effective to instead try to prove that 5
 is {\em not} even, this, however, also doesn't work. This is due to the
@@ -367,7 +382,7 @@ In the process of introducing dependent types, we have shown the necessary
 changes and extensions on the STLC to achieve the expressivity necessary to
 function as a foundation for mathematics. To clarify this process and to show
 the relationship between each of the systems we have previously mentioned, we
-include a diagram of the {\em Lambda Cube}:
+include a diagram of the {\em Lambda Cube} \cite{}:
 \begin{center}
   \begin{tikzpicture}[
       back line/.style={densely dotted},
@@ -397,7 +412,7 @@ include a diagram of the {\em Lambda Cube}:
     (m-2-3) edge [cross line] (m-4-3);
   \end{tikzpicture}
 \end{center}
-Reading the cube requires us to start on the edge marked \(\lambda\rightarrow\),
+Reading the cube requires us to start on the edge marked \(\lambda\!\!\rightarrow\),
 which corresponds to the STLC, the base system. From here, we can either move
 inwards, upwards, or rightwards, which corresponds to the extension to the
 other systems marked on the respective edges. Using only these three movements,

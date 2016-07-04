@@ -469,10 +469,17 @@ multiplication. For the latter, we use the names {\tt plus} and {\tt times}.
 We start with \(\perp\), the empty type. We include the definition of \(\perp\),
 {\tt rec⊥} and {\tt ind⊥}:
 
-
-
 \section{Example Types and Sample Proofs}
-Describe the section.
+In this section, we present the type of Booleans, Natural numbers, Lists,
+and the identity type. To further understand these types, we also include
+a brief description of the different forms of equality, namely definitional,
+judgmental and propositional. In type theory, the specific differences
+between the three are generally misunderstood but are important in understanding
+basic type theoretic proof methods, which we also go into some detail in
+this section with several examples.
+
+\subsection*{Equality}
+%% talk about definitional equality, judgmental equality, prop equality
 
 \subsection*{Booleans}
 \begin{center}
@@ -492,6 +499,7 @@ ind𝔹 C t f False = f
 \end{code}
 \end{minipage}
 \end{center}
+%% proof: 1 + 1 = 2
 
 \subsection*{Natural Numbers}
 \begin{center}
@@ -533,24 +541,39 @@ indList C c f (x :: xs) = f x xs (indList C c f xs)
 \end{center}
 
 \subsection*{Identity Types}
+%% say something that this is the HoTT version of identity
+%% possibly also point out that the discrepancy between the two
 \begin{center}
 \begin{minipage}{0.9\textwidth}
 \begin{code}
-infix  4  _≡_     -- propositional equality
-
+infix  4  _≡_
 data _≡_ {ℓ} {A : Set ℓ} : (a b : A) → Set ℓ where
   refl : (a : A) → (a ≡ a)
 
-ind≡ : {A : Set} (C : {x y : A} → x ≡ y → Set) →
-       (∀ (x : A) → C (refl x)) →
-       {x y : A} (p : x ≡ y) → C p
-ind≡ C c (refl x) = c x       
+-- "PROPOSITIONAL EQUALITY"
+-- For a proposition on an arbitrary identity type,
+-- if we can show that it holds for (refl x), then
+-- C holds for all proofs, p, such that x ≡ y.
+J : {A : Set} (C : {x y : A} → x ≡ y → Set) →
+    (∀ (x : A) → C (refl x)) →
+    {x y : A} (p : x ≡ y) → C p
+J C c (refl x) = c x
 
-rec≡ : {A : Set} {x y : A} (C : A → Set) → (p : x ≡ y) → C x → C y
+-- "STRICT EQUALITY"
+-- For a proposition on a reflexive equality (x ≡ x),
+-- if we can show that it holds for (refl x), then
+-- C holds for all other reflexive equalities p : x ≡ x.
+K : {A : Set} (C : {x : A} → x ≡ x → Set) →
+    (∀ (x : A) → C (refl x)) →
+    {x : A} (p : x ≡ x) → C p
+K C c (refl x) = c x
+
+rec≡ : {A : Set} {x y : A} (C : A → Set) →
+       (p : x ≡ y) → C x → C y
 rec≡ {A} {x} {y} C = 
-  ind≡ (λ {x} {y} _ → C x → C y)
-       (λ x → λ z → z)
-       {x} {y} 
+  J (λ {x} {y} _ → C x → C y)
+    (λ x → λ z → z)
+    {x} {y} 
 \end{code}
 \end{minipage}
 \end{center}

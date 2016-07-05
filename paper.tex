@@ -424,15 +424,19 @@ position on the cube.
 %% Curry-Howard?
 In this section, we introduce the foundational concepts of Martin-L\"of Type
 Theory \cite{}. We discuss recursion, induction, and as well several primitive type
-encodings (e.g. from propositional logic).
+encodings (from propositional logic).
 
 \subsection*{Principles}
 Recursion and induction are one of the powerful tools available in a
-fully-dependently typed system. Using recursion and induction principles to
-define functions and proofs, we are guaranteed termination and totality. This is
-because, in general, recursion and induction principles are defined under certain
-known intuitions (we can think of them as axioms) on the given type that they are
-meant to act on. They also follow a certain pattern:
+fully-dependently typed system. Recursion and induction principles can be
+thought of as specialized functions to behave on elements of a given type.
+If we use recursion and induction principles to define functions and proofs,
+we are guaranteed both termination and totality. This is because, in general,
+recursion and induction principles are defined under certain known intuitions
+(which is why they are sometimes considered axioms) on the given type that
+they are meant to act on.
+
+These principles follow a certain pattern:
 \begin{center}
 \begin{minipage}{0.9\textwidth}
 \begin{code}
@@ -448,15 +452,15 @@ The recursion and induction principles for some type {\tt T}.
 \end{minipage}
 \end{center}
 The first argument given to these principles is sometimes called the {\em motive}.
-This simply means that {\tt C} is the type we are going to inhabit. For recursion
-principles, this means the given output of the function we are defining, and for
-induction principles, this can be read as the proposition we are trying to prove.
-The terms that follow (viz. {\tt C₀}) correspond to the constructors of the given
-type, which is how these principles guarantee totality. Finally, both principles
-take a term of the type that are acting on (viz. {\tt T} and {\tt (t : T)}). The
-only difference is that the induction principle introduces a type family, as
-opposed to non-parameterized type in the recursion principle. We discuss this in
-Section 4.
+This simply means that {\tt C} is the type from which we will return a element
+from. For recursion principles, this means the given output of the function we
+are defining, and for induction principles, this can be read as the proposition
+we are trying to prove. The terms that follow (viz. {\tt C₀}) correspond to the
+constructor(s) of the given type, which is how these principles guarantee
+totality. Finally, both principles take a term of the type that are acting on
+(viz. {\tt T} and {\tt (t : T)}). The only difference is that the induction
+principle introduces a type family, as opposed to a non-parameterized type in the
+recursion principle. We discuss this in Section 4.
 
 In this section, we discuss the recursion and induction principles, {\tt rec}
 and {\tt ind}, for each {\em primitive type}: \(\perp\), \(\top\), +,
@@ -466,8 +470,153 @@ multiplication. For the latter, we use the names {\tt plus} and {\tt times}.
 
 \subsection*{Primitive Type Encodings}
 %% Bottom, Top, Disjunction, Conjunction, Sigma
-We start with \(\perp\), the empty type. We include the definition of \(\perp\),
-{\tt rec⊥} and {\tt ind⊥}:
+We start with \(\perp\), the empty type. Since there no ways to construct
+an element of the empty type, the encoding is rather simple:
+\begin{center}
+\begin{minipage}{0.9\textwidth}
+\begin{code}
+data ⊥ : Set where
+
+rec⊥ : (C : Set) → ⊥ → C
+rec⊥ C ()
+
+ind⊥ : (C : ⊥ → Set) → (z : ⊥) → C z
+ind⊥ C ()
+
+prop : {A : Set} → ⊥ → A
+prop {A} perp = rec⊥ A perp
+
+prop' : {A : ⊥ → Set} → (x : ⊥) → A x
+prop' {A} perp = ind⊥ A perp
+\end{code}
+\end{minipage}
+\end{center}
+The behavior of the empty type is meant to model {\it ex-falso} (i.e., from
+absurdity comes anything we like). In general, we use the empty type when
+writing proofs containing negated expressions.
+
+To clarify our discussion about the empty type, we include a proof of:
+$$\neg\neg\neg A\rightarrow\neg A$$
+Here, we define negation, \(\neg\), to be a function, such that:
+\begin{center}
+\begin{minipage}{0.9\textwidth}
+\begin{code}
+¬ : Set → Set
+¬ A = A → ⊥
+
+prop₀ : {A : Set} → ¬ (¬ (¬ A)) → ¬ A
+prop₀ ¬¬¬a a = ?
+\end{code}
+\end{minipage}
+\end{center}
+Now, we solve for {\tt ?}. Looking at the type expression of {\tt prop₀},
+we know we have an expression of type \(\neg\neg\neg A\) and also an
+expression of type \(A\). To clarify, we can rewrite the type expression
+after desugaring \(\neg A\):
+$$\neg\neg\neg A\rightarrow A\rightarrow\perp$$
+Now, to construct an element of type \(\neg A\) from an element of type
+\(\neg\neg\neg A\), we can use the definition of \(\neg\):
+$$(\neg\neg A\rightarrow\perp)\rightarrow A\rightarrow\perp$$
+$$((\neg A\rightarrow\perp)\rightarrow\perp)\rightarrow A\rightarrow\perp$$
+$$(((A\rightarrow\perp)\rightarrow\perp)\rightarrow\perp)\rightarrow A\rightarrow\perp$$
+Thus, we know we must apply our expression \(\neg\neg\neg A\) to a function
+of type \(\neg\neg A\) and so on, such that:
+\begin{center}
+\begin{minipage}{0.9\textwidth}
+\begin{code}
+prop₀ : {A : Set} → ¬ (¬ (¬ A)) → ¬ A
+prop₀ ¬¬¬a a = ¬¬¬a (λ ¬a → ¬a a)
+\end{code}
+\end{minipage}
+\end{center}
+Or equivalently:
+\begin{center}
+\begin{minipage}{0.9\textwidth}
+\begin{code}
+prop₀ ¬¬¬a a = rec⊥ ⊥ (¬¬¬a (λ ¬a → ¬a a))
+\end{code}
+\end{minipage}
+\end{center}
+
+Next, we introduce the type \(\top\), which contains exactly one element,
+{\tt *}:
+\begin{center}
+\begin{minipage}{0.9\textwidth}
+\begin{code}
+data ⊤ : Set where
+  * : ⊤
+
+rec⊤ : (C : Set) → C → ⊤ → C
+rec⊤ C c * = c
+
+ind⊤ : (C : ⊤ → Set) → C * → (x : ⊤) → C x
+ind⊤ C c * = c
+\end{code}
+\end{minipage}
+\end{center}
+Similar to \(\perp\), \(\top\) is simple and is rather uninteresting by itself.
+There are, however, some trivial yet interesting proofs that involve the two.
+The first of these we also introduce a special kind of proof: {\it uniqueness
+of identity} (UIP) \cite{}. In this proof, we set out to determine and classify
+the identity of every element within a given type. For example, for \(\top\), we
+should be able to prove:
+$$\forall (x : \top) \rightarrow x ≡ *$$
+That is, for every element of type \(\top\), that element is equivalent to {\tt *}.
+This second expression, {\it x ≡} {\tt *}, is an example of an {\it identity type},
+which we describe later on in this section. For now, we simply say that the
+sole constructor for the identity type is {\it refl x}, for all x.
+
+Now, to prove the above proposition, we can use the induction principle for
+\(\top\), since the proposition we are trying to prove concerns all elements
+of \(\top\):
+\begin{center}
+\begin{minipage}{0.9\textwidth}
+\begin{code}
+uip⊤ : (x : ⊤) → x ≡ *
+uip⊤ x = ind⊤ (λ top → top ≡ *) (refl *) x
+--uip⊤ * = refl *
+\end{code}
+\end{minipage}
+\end{center}
+Here, we have taken our motive to be the expression {\tt (λ top → top ≡ *)},
+which essentially repeats the information already given by our type expression.
+The second element, {\tt refl *}, is a proof that our motive holds in the event
+{\tt top} is {\tt *}, which is of type {\tt * ≡ *}. The last element {\tt x} is
+the expression initially passed to our proof of type \(\top\). Equivalently, we
+could have also written our proof as the third line above. This form of proof
+uses pattern matching and essentially asserts that the only element in \(\top\)
+is {\tt *}, which greatly simplifies our proof. Both methods of proof are
+correct, but, in general, using pattern matching is only safe when the values of
+proof expressions are not dependent one another (i.e., their values don't change
+depending on which expression we apply pattern matching to).
+
+Before we can do more proofs, we first introduce the disjunction type, +: 
+\begin{center}
+\begin{minipage}{0.9\textwidth}
+\begin{code}
+data _+_ (A B : Set) : Set where
+  inl : A → A + B
+  inr : B → A + B
+
+rec+ : {A B : Set} (C : Set) → (A → C) → (B → C) →
+       A + B → C
+rec+ C f _ (inl a) = f a
+rec+ C _ f (inr b) = f b
+
+ind+ : {A B : Set} (C : A + B → Set) →
+       (∀ (x : A) → C (inl x)) →
+       (∀ (x : B) → C (inr x)) →
+       (x : A + B) → C x
+ind+ C f _ (inl a) = f a
+ind+ C _ f (inr b) = f b
+\end{code}
+\end{minipage}
+\end{center}
+It might come as surprise as to why the symbol for addition is generally used
+for the disjunction type. This is because another name for + is a {\it union type}.
+This type is parameterized over two other types, {\tt A} and {\tt B}, and
+creates a union between them in that every expression of type {\tt A + B} is
+either {\tt inl a}, where {\tt a : A}, or {\tt inr b}, where {\tt b : B}.
 
 \section{Example Types and Sample Proofs}
 In this section, we present the type of Booleans, Natural numbers, Lists,
@@ -505,6 +654,10 @@ ind𝔹 C t f False = f
 \begin{center}
 \begin{minipage}{0.9\textwidth}
 \begin{code}
+data ℕ : Set where
+  0 : ℕ
+  suc : ℕ → ℕ
+
 recℕ : (C : Set) → C → (ℕ → C → C) → ℕ → C
 recℕ C c _ 0 = c
 recℕ C c f (suc n) = f n (recℕ C c f n) 
@@ -532,7 +685,7 @@ recList C c f Nil = c
 recList C c f (x :: xs) = f x xs (recList C c f xs)
 
 indList : {A : Set} → (C : List A → Set) → C Nil →
-          ((x : A) → (xs : List A) → C xs → C (x :: xs)) →
+          (∀ (x : A) → (xs : List A) → C xs → C (x :: xs)) →
           (xs : List A) → C xs
 indList C c f Nil = c
 indList C c f (x :: xs) = f x xs (indList C c f xs)
@@ -551,17 +704,17 @@ data _≡_ {ℓ} {A : Set ℓ} : (a b : A) → Set ℓ where
   refl : (a : A) → (a ≡ a)
 
 -- "PROPOSITIONAL EQUALITY"
--- For a proposition on an arbitrary identity type,
--- if we can show that it holds for (refl x), then
--- C holds for all proofs, p, such that x ≡ y.
+-- For a proposition, C, on a proof of x ≡ y for
+-- any x and y, if we can show that it holds for
+-- (refl x), then C holds for all proofs, p : x ≡ y.
 J : {A : Set} (C : {x y : A} → x ≡ y → Set) →
     (∀ (x : A) → C (refl x)) →
     {x y : A} (p : x ≡ y) → C p
 J C c (refl x) = c x
 
 -- "STRICT EQUALITY"
--- For a proposition on a reflexive equality (x ≡ x),
--- if we can show that it holds for (refl x), then
+-- For a proposition, C, on a reflexive equality (x ≡ x),
+-- for any x, if we can show that it holds for (refl x), then
 -- C holds for all other reflexive equalities p : x ≡ x.
 K : {A : Set} (C : {x : A} → x ≡ x → Set) →
     (∀ (x : A) → C (refl x)) →

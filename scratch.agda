@@ -8,11 +8,25 @@ rec⊥ C ()
 ind⊥ : (C : ⊥ → Set) → (z : ⊥) → C z
 ind⊥ C ()
 
+prop : {A : Set} → ⊥ → A
+prop {A} perp = rec⊥ A perp
+
+prop' : {A : ⊥ → Set} → (x : ⊥) → A x
+prop' {A} perp = ind⊥ A perp
+
+¬ : Set → Set
+¬ A = A → ⊥
+
+
+prop₀ : {A : Set} → ¬ (¬ (¬ A)) → ¬ A
+prop₀ {A} ¬¬¬a a = rec⊥ ⊥ (¬¬¬a (λ ¬a → ¬a a))
+  -- ¬¬¬a (λ ¬a → rec⊥ ⊥ (¬a a))
+
 data ⊤ : Set where
   * : ⊤
 
 rec⊤ : (C : Set) → C → ⊤ → C
-rec⊤ C z _ = z
+rec⊤ C c * = c
 
 ind⊤ : (C : ⊤ → Set) → C * → (x : ⊤) → C x
 ind⊤ C c * = c
@@ -21,14 +35,22 @@ data _+'_ (A B : Set) : Set where
   inl : A → A +' B
   inr : B → A +' B
 
+prop₁ : ⊤ +' ⊥ → ⊤
+prop₁ (inl *) = *
+prop₁ (inr perp) = rec⊥ ⊤ perp
+
+-- data _+'_ (A B : Set) : Set where
+--   inl : A → A +' B
+--   inr : B → A +' B
+
 rec+ : {A B : Set} (C : Set) → (A → C) → (B → C) → A +' B → C
 rec+ C f _ (inl a) = f a
 rec+ C _ f (inr b) = f b
 
 ind+ : {A B : Set} (C : A +' B → Set) →
-     (∀ (x : A) → C (inl x)) →
-     (∀ (x : B) → C (inr x)) →
-     (x : A +' B) → C x
+       (∀ (x : A) → C (inl x)) →
+       (∀ (x : B) → C (inr x)) →
+       (x : A +' B) → C x
 ind+ C f _ (inl a) = f a
 ind+ C _ f (inr b) = f b
 
@@ -72,6 +94,10 @@ ind𝔹 : (C : 𝔹 → Set) → C True → C False → (x : 𝔹) → C x
 ind𝔹 C t f True = t
 ind𝔹 C t f False = f
 
+-- data ℕ : Set where
+--   0 : ℕ
+--   suc : ℕ → ℕ
+  
 recℕ : (C : Set) → C → (ℕ → C → C) → ℕ → C
 recℕ C c _ 0 = c
 recℕ C c f (suc n) = f n (recℕ C c f n) 
@@ -97,24 +123,41 @@ data _isEven : ℕ → Set where
 4isEven : 4 isEven
 4isEven = NEven 2 (NEven 0 ZEven)
 
-¬ : Set → Set
-¬ A = A → ⊥
 
-infix  4  _≡_     -- propositional equality
-
+infix  4  _≡_
 data _≡_ {ℓ} {A : Set ℓ} : (a b : A) → Set ℓ where
   refl : (a : A) → (a ≡ a)
 
-ind≡ : {A : Set} (C : {x y : A} → x ≡ y → Set) →
+-- "PROPOSITIONAL EQUALITY"
+-- For a proposition on an arbitrary identity type,
+-- if we can show that it holds for (refl x), then
+-- C holds for all proofs, p, such that x ≡ y.
+J : {A : Set} (C : {x y : A} → x ≡ y → Set) →
        (∀ (x : A) → C (refl x)) →
        {x y : A} (p : x ≡ y) → C p
-ind≡ C c (refl x) = c x       
+J C c (refl x) = c x
 
-rec≡ : {A : Set} {x y : A} (C : A → Set) → (p : x ≡ y) → C x → C y
+-- "STRICT EQUALITY"
+-- For a proposition on a reflexive equality (x ≡ x),
+-- if we can show that it holds for (refl x), then
+-- C holds for all other reflexive equalities p : x ≡ x.
+K : {A : Set} (C : {x : A} → x ≡ x → Set) →
+        (∀ (x : A) → C (refl x)) →
+        {x : A} (p : x ≡ x) → C p
+K C c (refl x) = c x
+
+rec≡ : {A : Set} {x y : A} (C : A → Set) →
+       (p : x ≡ y) → C x → C y
 rec≡ {A} {x} {y} C = 
-  ind≡ (λ {x} {y} _ → C x → C y)
-       (λ x → λ z → z)
-       {x} {y} 
+  J (λ {x} {y} _ → C x → C y)
+    (λ x → λ z → z)
+    {x} {y}
+
+
+⊤ᵤ : (x : ⊤) → x ≡ *
+-- ⊤ᵤ * = refl *
+⊤ᵤ x = ind⊤ (λ top → top ≡ *) (refl *) x
+
 
 data List (A : Set) : Set where
   Nil  : List A
@@ -126,7 +169,7 @@ recList C c f Nil = c
 recList C c f (x :: xs) = f x xs (recList C c f xs)
 
 indList : {A : Set} → (C : List A → Set) → C Nil →
-          ((x : A) → (xs : List A) → C xs → C (x :: xs)) →
+          (∀ (x : A) → (xs : List A) → C xs → C (x :: xs)) →
           (xs : List A) → C xs
 indList C c f Nil = c
 indList C c f (x :: xs) = f x xs (indList C c f xs)

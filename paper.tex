@@ -1,4 +1,5 @@
 \title{Dependent Types and Martin-L\"of Type Theory: An Introduction}
+%% \title{Dependent Types and Type Theory: An Introduction}
 \author{Carl Factora}
 \date{\today}
 
@@ -45,28 +46,27 @@
 %% \end{abstract}
 
 \section{Introduction}
-We present an introduction to dependent types and fundamental type theory.
+We present an introduction to dependent types and (Martin-L\"of) type theory.
 At its core, type theory seeks to serve as a possible foundation of mathematics,
 which itself is based on a different logical foundation. This proof-relevant
 form of mathematics is the basis in which types can be used to model logical
 propositions and is the core idea of type theory. As such, not only does type
 theory have a viable application in mathematics but also in computer science,
-providing a richer world of types and expressibility.
+providing for both a richer world of types and expressibility.
 
 The study of type theory goes hand in hand with the study of dependent types,
-which is the reason why first take the time to do so in Section 2. After we
-have derived a proper foundation for type theory, we then continue with the
-foundational concepts of Martin-L\"of type theory. We recommend using a proof
-assistant while working and studying with the examples we provide. For such
-examples, we use Agda notation.
-
+which is  why we first take the time to do familiarize ourselves with them in
+Section 2. We then continue with the foundational concepts of type theory of
+Per Martin-L\"of \cite{}. In this section, while reading through the examples
+we have provided, we recommend using a proof assistant, such as Agda. In our
+examples, we refer to Agda notation.
 
 \section{Dependent Types}
 In this section, we introduce the concept of dependent types and their role in
 type theoretic systems. At their core, dependent types can be thought of simply
 as an \textit{interplay of types and terms}. To understand this relationship,
 it helps to think of the ways in which types and terms can \textit{depend} on
-each other. Altogether, there are four different kinds of dependencies:
+one another. Altogether, this results in four dependencies:
 
 \begin{enumerate}
 \item terms depending on terms
@@ -82,7 +82,7 @@ not typed with dependent types).
 What follows is a brief description of each form of dependency and the
 corresponding \(\lambda\)-calculus that is associated with it. With this, we
 introduce the (fully-dependent) system of the \textit{Calculus of Constructions}
-(\(\lambda C\)). Here, the word \textit{fully} signifies that \(\lambda C\)
+(\(\lambda C\)) \cite{}. Here, the word \textit{fully} signifies that \(\lambda C\)
 features all four forms of dependency mentioned above.
 
 \subsection*{Simply-Typed (STLC)}
@@ -90,8 +90,9 @@ features all four forms of dependency mentioned above.
 The STLC is not a dependently typed system. In fact, the term {\em dependent type}
 is drawn in constrast with the term {\em simple type}, where the STLC derives
 its namesake. A simple type is either a {\em primitive type}, which is the set
-of all types ``pre-defined'' within the system, or a {\em function type} between
-other simple types. Thus, simple types have the following grammar:
+of all types ``pre-defined'' (e.g. lists, numbers, booleans), or a
+{\em function type} between other simple types. Thus, simple types have the
+following grammar:
 \begin{center}
 \begin{minipage}{0.5\textwidth}
 \begin{code}
@@ -101,14 +102,34 @@ t || t → t
 \end{center}
 The terms of the STLC are the terms of the \textit{untyped \(\lambda\)-calculus},
 with the exception of terms that use \textit{self-application} (i.e., Y
-combinator, Omega, etc.). This has the benefit of removing all \textit{infinite}
-calculations from the system but also removing all recursive computations \cite{}.
-Thus, the STLC is not \textit{Turing complete} and is thus the appropriate
-foundation for deriving a type theoretic system. This is because the STLC lends
-itself quite seamlessly as component of a larger, more expressive system. This
-flexibility is what we exploit to derive \(\lambda C\). To do this, we first
-extend the STLC with more expressive types through simple extentions on its
-grammar for simple types.
+combinator, Omega, etc.). An example term, annotated with its type, is generally
+written as follows:
+\begin{center}
+\begin{minipage}{0.5\textwidth}
+\begin{code}
+example : ℕ → ℕ
+example = λ (z : ℕ) → z
+\end{code}
+\end{minipage}
+\end{center}
+Or, equivalently,
+\begin{center}
+\begin{minipage}{0.5\textwidth}
+\begin{code}
+example = λ z → z
+\end{code}
+\end{minipage}
+\end{center}
+whenever the type of the argument (viz. {\tt z}) is easily inferable.
+
+This leaves the STLC rather small and limited but has the benefit of removing
+all \textit{infinite} calculations from the system \cite{}. Thus, the STLC is
+not \textit{Turing complete} and is thus the appropriate foundation for
+deriving a type theoretic system. This is because the STLC lends itself quite
+seamlessly as component of a larger, more expressive system. This flexibility
+is what we exploit to derive \(\lambda C\). To do this, we first extend the STLC
+with more expressive types through simple extentions on its grammar for simple
+types.
 
 %% as the only form of dependency
 %% present in the STLC is (1), terms depending on terms (i.e. {\em term level}

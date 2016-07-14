@@ -1,5 +1,6 @@
 open import Data.Nat
 -- open import Data.Empty
+
 data ⊥ : Set where
 
 rec⊥ : (C : Set) → ⊥ → C
@@ -94,9 +95,13 @@ ind𝔹 : (C : 𝔹 → Set) → C True → C False → (x : 𝔹) → C x
 ind𝔹 C t f True = t
 ind𝔹 C t f False = f
 
--- data ℕ : Set where
+-- data ℕ: Set where
 --   0 : ℕ
 --   suc : ℕ → ℕ
+
+example : ℕ → ℕ
+-- example = λ (z : ℕ) → z
+example = λ z → z
   
 recℕ : (C : Set) → C → (ℕ → C → C) → ℕ → C
 recℕ C c _ 0 = c

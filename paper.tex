@@ -48,18 +48,18 @@
 \section{Introduction}
 We present an introduction to dependent types and (Martin-L\"of) type theory.
 At its core, type theory seeks to serve as a possible foundation of mathematics,
-which itself is based on a different logical foundation. This proof-relevant
+one that is based on a different logical foundation. This proof-relevant
 form of mathematics is the basis in which types can be used to model logical
 propositions and is the core idea of type theory. As such, not only does type
-theory have a viable application in mathematics but also in computer science,
-providing for both a richer world of types and expressibility.
+theory have a viable application in mathematics but also a growing interest
+in the field of computer science. In both fields, type theory provides a richer
+world of types and expressibiilty.
 
 The study of type theory goes hand in hand with the study of dependent types,
-which is  why we first take the time to do familiarize ourselves with them in
-Section 2. We then continue with the foundational concepts of type theory of
-Per Martin-L\"of \cite{}. In this section, while reading through the examples
-we have provided, we recommend using a proof assistant, such as Agda. In our
-examples, we refer to Agda notation. 
+which is why we first take the time to do familiarize ourselves with them
+(Section 2). We then continue with the foundational concepts of type theory of
+Per Martin-L\"of \cite{}. For this, we recommend using a proof assistant, such
+as Agda. In our examples, we refer to Agda syntax rules. 
 
 \section{Dependent Types}
 In this section, we introduce the concept of dependent types and their role in
@@ -74,10 +74,10 @@ one another. Altogether, this results in four dependencies:
 \item types depending on types
 \item types depending on terms
 \end{enumerate}
-These dependecies, however, should not be confused with an actual dependent
-type. In fact, only (2) and (4) correspond to expressions that are typed
-(necessarily) with a dependent type (we explain later why (1) and (3) are
-not typed with dependent types).
+These dependecies, however, should not be confused with dependent types.
+In fact, only (2) and (4) correspond to expressions that are typed (necessarily)
+with a dependent type (we explain later why (1) and (3) are not typed with
+dependent types).
 
 What follows is a brief description of each form of dependency and the
 corresponding \(\lambda\)-calculus that is associated with it. With this, we
@@ -89,14 +89,14 @@ features all four forms of dependency mentioned above.
 \subsubsection*{Role: Base System}
 The STLC is not a dependently typed system. In fact, the term {\em dependent type}
 is drawn in constrast with the term {\em simple type}, where the STLC derives
-its namesake. A simple type is either a {\em primitive type}, which is the set
-of all types ``pre-defined'' (e.g. lists, numbers, booleans), or a
-{\em function type} between other simple types. Thus, simple types have the
+its namesake. A simple type ({\tt t}) is either a {\em primitive type}, {\tt Prim},
+which is the set of all types ``pre-defined'' (e.g. lists, numbers, booleans),
+or a {\em function type} between other simple types. Thus, simple types have the
 following grammar:
 \begin{center}
 \begin{minipage}{0.5\textwidth}
 \begin{code}
-t || t → t
+Prim || t → t
 \end{code}
 \end{minipage}
 \end{center}
@@ -108,7 +108,7 @@ written as follows:
 \begin{minipage}{0.5\textwidth}
 \begin{code}
 example : ℕ → ℕ
-example = λ (z : ℕ) → z
+example = λ (n : ℕ) → n
 \end{code}
 \end{minipage}
 \end{center}
@@ -116,30 +116,28 @@ Or, equivalently,
 \begin{center}
 \begin{minipage}{0.5\textwidth}
 \begin{code}
-example = λ z → z
+example = λ n → n
 \end{code}
 \end{minipage}
 \end{center}
-whenever the type of the argument (viz. {\tt z}) is easily inferable.
+whenever the type of the argument (viz. {\tt n}) is easily inferable. In this
+case, since {\tt example} is of type {\tt ℕ → ℕ}, the argument {\tt n} has
+to be of type {\tt ℕ}, therefore leaving its type annotation unnecessary.
 
-This leaves the STLC rather small and limited but has the benefit of removing
-all \textit{infinite} calculations from the system \cite{}. Thus, the STLC is
-not \textit{Turing complete} and is thus the appropriate foundation for
-deriving a type theoretic system. This is because the STLC lends itself quite
-seamlessly as component of a larger, more expressive system. This flexibility
-is what we exploit to derive \(\lambda C\). To do this, we first extend the STLC
-with more expressive types through simple extentions on its grammar for simple
-types.
-
-%% as the only form of dependency
-%% present in the STLC is (1), terms depending on terms (i.e. {\em term level}
-%% \(\lambda\)-abstraction).
+The STLC has limited expressibilty but has the benefit of removing all
+\textit{infinite} calculations from the system \cite{} and is thus the
+appropriate foundation for deriving a type theoretic system. This is because
+the STLC lends itself quite seamlessly as component of a larger, more expressive
+system. This flexibility is what we exploit to derive \(\lambda C\). To do this,
+we first extend the STLC with more expressive types through simple extentions on
+its grammar for simple types.
 
 The key difference between the STLC and \(\lambda C\) are the places in which
 terms and types are allowed to be. In the STLC, terms and types are entirely
 seperate entities in that terms only exist on {\em term level} and types
-on {\em type level}. Thus, as we mentioned earlier, this puts a constraint
-on the system to only allow \(\lambda\)-abstraction to happen at term level
+on {\em type level}. We return to the idea of {\em levels} later. Thus, as we
+mentioned earlier, this puts a constraint on the system to only allow
+\(\lambda\)-abstraction and function application to happen at term level
 (viz. definition of simple type). For example, the \textit{constant function}
 over types \(\mathbb{N}\) and \(\mathbb{B}\) in the STLC is defined:
 \begin{center}
@@ -153,14 +151,14 @@ const = λ n b → n
 Given that {\tt const} is of type {\tt ℕ → 𝔹 → ℕ}, the term that inhabits this
 type is {\tt λ n b → n}. In this example, we can see that terms and types are
 treated differently and are only related in terms of {\em inhabitance}. This
-relation is reason for the limited expressivity of the STLC and is also the
+relation is the reason for the limited expressivity of the STLC and is also the
 method in which the STLC can be extended into \(\lambda C\).
 
 \subsection*{Second-Order (\(\lambda2\))}
 \subsubsection*{Role: Addition of polymorphic functions}
 
 Another name for \(\lambda2\) is System F \cite{}. For our purposes, we treat
-\(\lambda2\) as simply an extension of the STLC. This system is adds
+\(\lambda2\) simply as an extension of the STLC. This system is adds
 {\em polymorphic} terms to the STLC (viz. Dependency (2)). For example,
 let's take the definition of {\tt const} above and change it to define
 {\tt polyConst}:
@@ -175,24 +173,23 @@ polyConst A B = λ a b → a
 \end{center}
 
 Unlike {\tt const}, {\tt polyConst} takes four arguments, where the first two
-are types. These two types (viz {\tt A} and {\tt B}) are the corresponding
+are types. These two types (viz. {\tt A} and {\tt B}) are the corresponding
 types of the third and fourth arguments of {\tt polyConst}. To clarify, we can
 instantiate {\tt polyConst} with \(\mathbb{N}\) and \(\mathbb{B}\) resulting
-in a function of type {\tt ℕ → 𝔹 → ℕ}, giving us
-
+in a function of type {\tt ℕ → 𝔹 → ℕ}, giving us:
 $${\tt const} = {\tt polyConst(ℕ,𝔹)}.$$
 Thus, adding polymorphism to the STLC has the effect of extending the notion
 of type and term. With \(\lambda2\), we are now allowed to pass types as arguments
 at term level (viz. we pass the actual types \(\mathbb{N}\) and \(\mathbb{B}\)).
 It is, however, necessary to constrain this expressivity with a more expressive
-type (e.g. {\tt (x : A) → ...}). Types that appear in this fashion are
+type (e.g. {\tt (x : Set) → ...}). Types that appear in this fashion are
 called \(\Pi\)-types. Taking the grammar for simple types, we can add \(\Pi\)-types,
 resulting in the grammar for types ({\tt t}) in \(\lambda2\):
 
 \begin{center}
 \begin{minipage}{0.5\textwidth}
 \begin{code}
-t || t → t || ∀ (x : Set) → t
+Prim || t → t || ∀ (x : Set) → t
 \end{code}
 
 
@@ -272,11 +269,10 @@ We can now revise the definition of types ({\tt t}) to include all instances of
 \begin{center}
 \begin{minipage}{0.65\textwidth}
 \begin{code}
-t || t → t || ∀ (x : Set) → t || Set
+Prim || t → t || ∀ (x : Set) → t || Set
 \end{code}
 \end{minipage}
 \end{center}
-
 The curious effect of doing this allows us to construct expressions of type
 {\tt t → t}, where either {\tt t} can have subexpressions containing {\tt Set}.
 Let's take the familiar definition of the list data structure:
@@ -300,12 +296,14 @@ a form of polymorphic function of type {\tt Set → Set}, as is similar with oth
 {\em parameterized types}. Unlike like {\tt const} or {\tt polyConst}, this
 function can only be applied at type level (thus the name {\em type constructor}).
 This is to insure that we cannot write type expressions that fail to instantiate
-{\tt List} (e.g. {\tt List → A} v. {\tt List A → A}).
+{\tt List}. For example, the type expression {\tt List → A} is incorrect since
+{\tt List} cannot appear in a type expression without first being instantiated.
+To correct this, we can write this type expression as: {\tt List A → A}.
 
 From this we can see that the addition of {\tt Set} into our grammar of
 types has great effect on the expressivity of our system. There is only one
 other extension necessary to consider our system fully-dependently typed, which,
-similar to our treatment of \(\lambda\underline{\omega}\) is also deceptively
+similar to our treatment of \(\lambda\underline{\omega}\), is also deceptively
 simple.
 
 \subsection*{Predicates (\(\lambda P\))}
@@ -333,7 +331,6 @@ data _isEven : ℕ → Set where
 \end{code}
 \end{minipage}
 \end{center}
-
 Here, we've defined two ways in which {\tt n isEven} for all natural numbers
 ({\tt n}) can be proven. Returning to the idea of proof-relevant mathematics,
 we do this by use of its two type constructors {\tt ZEven} and {\tt NEven},
@@ -387,12 +384,13 @@ This is not possible since we cannot ever construct a proof that 5 is even. We
 discuss the empty type later in Section 3.
 
 \subsection*{Calculus of Constructions and Remarks}
-To conclude our discussion over dependent types, we present the final grammar for
-types after extending \(\lambda\omega\) with \(\lambda P\):
+To conclude our discussion of dependent types, we present the final grammar for
+types after extending \(\lambda\omega\) with \(\lambda P\), resulting in
+\(\lambda C\):
 \begin{center}
 \begin{minipage}{0.5\textwidth}
 \begin{code}
-t || t → t || ∀ (x : t) → t || Set
+Prim || t → t || ∀ (x : t) → t || Set
 \end{code}
 \end{minipage}
 \end{center}
@@ -436,10 +434,10 @@ include a diagram of the {\em Lambda Cube} \cite{}:
 \end{center}
 Reading the cube requires us to start on the edge marked \(\lambda\!\!\rightarrow\),
 which corresponds to the STLC, the base system. From here, we can either move
-inwards, upwards, or rightwards, which corresponds to the extension to the
-other systems marked on the respective edges. Using only these three movements,
-we eventually reach \(\lambda C\), leaving it in the {\em most powerful}
-position on the cube.
+inwards, upwards, or rightwards, which corresponds to the extension to the other
+systems marked on the respective edges. Using these three movements, we
+eventually reach \(\lambda C\), leaving it in the {\em most powerful} position
+on the cube.
 
 \section{Martin-L\"of Type Theory}
 %% Curry-Howard?
@@ -447,7 +445,7 @@ In this section, we introduce the foundational concepts of Martin-L\"of Type
 Theory \cite{}. We discuss recursion, induction, and as well several primitive type
 encodings (from propositional logic).
 
-\subsection*{Principles}
+\subsection*{Recursion and Induction Principles}
 Recursion and induction are one of the powerful tools available in a
 fully-dependently typed system. Recursion and induction principles can be
 thought of as specialized functions to behave on elements of a given type.
@@ -473,7 +471,7 @@ The recursion and induction principles for some type {\tt T}.
 \end{minipage}
 \end{center}
 The first argument given to these principles is sometimes called the {\em motive}.
-This simply means that {\tt C} is the type from which we will return a element
+This simply means that {\tt C} is the type from which we will return an element
 from. For recursion principles, this means the given output of the function we
 are defining, and for induction principles, this can be read as the proposition
 we are trying to prove. The terms that follow (viz. {\tt C₀}) correspond to the
@@ -558,7 +556,6 @@ prop₀ ¬¬¬a a = rec⊥ ⊥ (¬¬¬a (λ ¬a → ¬a a))
 \end{code}
 \end{minipage}
 \end{center}
-
 Next, we introduce the type \(\top\), which contains exactly one element,
 {\tt *}:
 \begin{center}
@@ -577,7 +574,7 @@ ind⊤ C c * = c
 \end{center}
 Similar to \(\perp\), \(\top\) is simple and is rather uninteresting by itself.
 There are, however, some trivial yet interesting proofs that involve the two.
-The first of these we also introduce a special kind of proof: {\it uniqueness
+For the first of these, we also introduce a special kind of proof: {\it uniqueness
 of identity} (UIP) \cite{}. In this proof, we set out to determine and classify
 the identity of every element within a given type. For example, for \(\top\), we
 should be able to prove:
@@ -594,22 +591,28 @@ of \(\top\):
 \begin{minipage}{0.9\textwidth}
 \begin{code}
 uip⊤ : (x : ⊤) → x ≡ *
-uip⊤ x = ind⊤ (λ top → top ≡ *) (refl *) x
---uip⊤ * = refl *
+uip⊤ = ind⊤ (λ top → top ≡ *) (refl *)
 \end{code}
 \end{minipage}
 \end{center}
 Here, we have taken our motive to be the expression {\tt (λ top → top ≡ *)},
 which essentially repeats the information already given by our type expression.
-The second element, {\tt refl *}, is a proof that our motive holds in the event
-{\tt top} is {\tt *}, which is of type {\tt * ≡ *}. The last element {\tt x} is
-the expression initially passed to our proof of type \(\top\). Equivalently, we
-could have also written our proof as the third line above. This form of proof
-uses pattern matching and essentially asserts that the only element in \(\top\)
-is {\tt *}, which greatly simplifies our proof. Both methods of proof are
-correct, but, in general, using pattern matching is only safe when the values of
-proof expressions are not dependent one another (i.e., their values don't change
-depending on which expression we apply pattern matching to).
+The second element, {\tt refl *}, is a proof that our motive holds in the case that
+{\tt top} is {\tt *} and is of type {\tt * ≡ *}.
+
+Alternatively, we could have written our proof as follows:
+\begin{center}
+\begin{minipage}{0.9\textwidth}
+\begin{code}
+uip⊤ * = refl *
+\end{code}
+\end{minipage}
+\end{center}
+This form of proof uses pattern matching and essentially asserts that the only
+element in \(\top\) is {\tt *}, which greatly simplifies our proof. Both methods
+of proof are correct, but, in general, using pattern matching is only safe when
+the values of proof expressions are not dependent one another (i.e., their
+values don't change depending on which expression we apply pattern matching to).
 
 Before we can do more proofs, we first introduce the disjunction type, +: 
 \begin{center}
@@ -755,6 +758,6 @@ rec≡ {A} {x} {y} C =
 \section{Discussion}
 Say a few things about the paper.
 
-\subsection*{Extension to Homotopy Type Theory}
+\subsection*{Extension to Homotopy Type Theory (maybe)}
 
 \end{document}

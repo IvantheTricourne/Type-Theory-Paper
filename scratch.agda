@@ -161,7 +161,7 @@ rec≡ {A} {x} {y} C =
 
 ⊤ᵤ : (x : ⊤) → x ≡ *
 -- ⊤ᵤ * = refl *
-⊤ᵤ x = ind⊤ (λ top → top ≡ *) (refl *) x
+⊤ᵤ = ind⊤ (λ top → top ≡ *) (refl *)
 
 
 data List (A : Set) : Set where
@@ -178,3 +178,7 @@ indList : {A : Set} → (C : List A → Set) → C Nil →
           (xs : List A) → C xs
 indList C c f Nil = c
 indList C c f (x :: xs) = f x xs (indList C c f xs)
+
+
+1+1=2 : ⊤ +' ⊤ → 𝔹
+1+1=2 = rec+ 𝔹 (λ _ → True) (λ _ → False)

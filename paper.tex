@@ -642,6 +642,19 @@ This type is parameterized over two other types, {\tt A} and {\tt B}, and
 creates a union between them in that every expression of type {\tt A + B} is
 either {\tt (inl a)}, where {\tt a : A}, or {\tt (inr b)}, where {\tt b : B}.
 
+We now can write a simple proof that shows the union of \(\top\) and \(\top\)
+is equivalent to the Boolean type, that is {\tt ⊤ + ⊤} = {\tt 𝔹}. Alternatively,
+since \(\top\) is occasionally written as 1 and {\tt 𝔹} as 2, we name our proof
+as follows:
+\begin{center}
+\begin{minipage}{0.9\textwidth}
+\begin{code}
+1+1=2 : ⊤ + ⊤ → 𝔹
+1+1=2 = ?
+\end{code}
+\end{minipage}
+\end{center}
+
 \section{Example Types and Sample Proofs}
 In this section, we present the type of Booleans, Natural numbers, Lists,
 and the identity type. To further understand these types, we also include

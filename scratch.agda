@@ -181,4 +181,4 @@ indList C c f (x :: xs) = f x xs (indList C c f xs)
 
 
 1+1=2 : ⊤ +' ⊤ → 𝔹
-1+1=2 = rec+ 𝔹 (λ _ → True) (λ _ → False)
+1+1=2 = rec+ 𝔹 (λ inl* → True) (λ inr* → False)

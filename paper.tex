@@ -654,6 +654,22 @@ as follows:
 \end{code}
 \end{minipage}
 \end{center}
+To do this, we must associate every possible term of type {\tt ⊤ + ⊤} to a
+given Boolean (i.e., True or False). This works out quite simply since the
+type {\tt ⊤ + ⊤} only has two possible terms, that is {\tt (inl *)} and
+{\tt (inr *)}. Thus, we can write the proof as follows:
+\begin{center}
+\begin{minipage}{0.9\textwidth}
+\begin{code}
+1+1=2 = rec+ 𝔹 (λ inl* → True) (λ inr* → False)
+\end{code}
+\end{minipage}
+\end{center}
+To clarify, this form of equivalence is called ``judmental equality''. We
+go over the three different forms of equivalence in the following section.
+
+
+%% x and Sigma
 
 \section{Example Types and Sample Proofs}
 In this section, we present the type of Booleans, Natural numbers, Lists,
@@ -685,7 +701,6 @@ ind𝔹 C t f False = f
 \end{code}
 \end{minipage}
 \end{center}
-%% proof: 1 + 1 = 2
 
 \subsection*{Natural Numbers}
 \begin{center}

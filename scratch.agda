@@ -179,6 +179,10 @@ indList : {A : Set} → (C : List A → Set) → C Nil →
 indList C c f Nil = c
 indList C c f (x :: xs) = f x xs (indList C c f xs)
 
+data _↔_ (A B : Set) : Set where
+  <>_ : (A → B) × (B → A) → (A ↔ B)
 
-1+1=2 : ⊤ +' ⊤ → 𝔹
-1+1=2 = rec+ 𝔹 (λ inl* → True) (λ inr* → False)
+1+1=2 : (⊤ +' ⊤) ↔ 𝔹
+1+1=2 = <> (1+1=2' , 1+1=2'')
+  where 1+1=2'  = rec+ 𝔹 (λ inl* → True) (λ inr* → False)
+        1+1=2'' = rec𝔹 (⊤ +' ⊤) (inl *) (inr *)

@@ -373,7 +373,7 @@ treatment of negation in Intuitionistic Logic. To prove that 5 is not even is
 to prove that \(\neg (5\) {\tt isEven}), which is equivalent to constructing a
 function of type:
 \begin{center}
-\begin{minipage}{0.2\textwidth}
+\begin{minipage}{0.3\textwidth}
 \begin{code}
 5 isEven → ⊥
 \end{code}
@@ -388,7 +388,7 @@ To conclude our discussion of dependent types, we present the final grammar for
 types after extending \(\lambda\omega\) with \(\lambda P\), resulting in
 \(\lambda C\):
 \begin{center}
-\begin{minipage}{0.5\textwidth}
+\begin{minipage}{0.6\textwidth}
 \begin{code}
 Prim || t → t || ∀ (x : t) → t || Set
 \end{code}
@@ -483,9 +483,9 @@ recursion principle. We discuss this in Section 4.
 
 In this section, we discuss the recursion and induction principles, {\tt rec}
 and {\tt ind}, for each {\em primitive type}: \(\perp\), \(\top\), +,
-\(\times\), and \(\Sigma\). The symbols + and \(\times\) signify disjunction
-and conjunction and, thus, should not be confused with addition and
-multiplication. For the latter, we use the names {\tt plus} and {\tt times}.
+and \(\times\). The symbols + and \(\times\) signify disjunction and conjunction
+and, thus, should not be confused with addition and multiplication. For the
+latter, we use the names {\tt plus} and {\tt times}.
 
 \subsection*{Primitive Type Encodings}
 %% Bottom, Top, Disjunction, Conjunction, Sigma
@@ -640,38 +640,70 @@ It might come as surprise as to why the symbol for addition is generally used
 for the disjunction type. This is because another name for + is a {\it union type}.
 This type is parameterized over two other types, {\tt A} and {\tt B}, and
 creates a union between them in that every expression of type {\tt A + B} is
-either {\tt (inl a)}, where {\tt a : A}, or {\tt (inr b)}, where {\tt b : B}.
+either {\tt (inl a)} or {\tt (inr b)}, where {\tt a : A} and {\tt b : B}.
 
-We now can write a simple proof that shows the union of \(\top\) and \(\top\)
-is equivalent to the Boolean type, that is {\tt ⊤ + ⊤} = {\tt 𝔹}. Alternatively,
-since \(\top\) is occasionally written as 1 and {\tt 𝔹} as 2, we name our proof
-as follows:
+Before we can provide our next example, we must first introduce the
+{\em pair type} or {\em logical conjunction}. We also provide the corresponding
+recursion and induction principle for the {\tt ×} type:
 \begin{center}
 \begin{minipage}{0.9\textwidth}
 \begin{code}
-1+1=2 : ⊤ + ⊤ → 𝔹
+data _×_ (A B : Set) : Set where
+  _,_ : A → B → A × B
+
+rec× : {A B : Set} (C : Set) → (A → B → C) → A × B → C
+rec× C f (a , b) = f a b
+
+ind× : {A B : Set} (C : A × B → Set) →
+       (∀ (x : A) (y : B) → C (x , y)) →
+       (x : A × B) → C x
+ind× C f (a , b) = f a b
+\end{code}
+\end{minipage}
+\end{center}
+
+We can now write a simple proof that shows the union of \(\top\) and \(\top\)
+is equivalent to the Boolean type, that is {\tt (⊤ + ⊤) ↔ 𝔹}.
+Alternatively, since \(\top\) is occasionally written as 1 and {\tt 𝔹} as 2, we
+name our proof as follows:
+\begin{center}
+\begin{minipage}{0.9\textwidth}
+\begin{code}
+1+1=2 : (⊤ + ⊤) ↔ 𝔹
 1+1=2 = ?
 \end{code}
 \end{minipage}
 \end{center}
 To do this, we must associate every possible term of type {\tt ⊤ + ⊤} to a
-given Boolean (i.e., True or False). This works out quite simply since the
-type {\tt ⊤ + ⊤} only has two possible terms, that is {\tt (inl *)} and
-{\tt (inr *)}. Thus, we can write the proof as follows:
+given Boolean. This works out quite simply since the type {\tt ⊤ + ⊤} only has
+two possible terms, {\tt (inl *)} and {\tt (inr *)}, which we can associate with
+the two terms, {\tt True} and {\tt False}, in the type {\tt 𝔹} and vice-versa.
+Thus, we can write the proof as follows:
 \begin{center}
 \begin{minipage}{0.9\textwidth}
 \begin{code}
-1+1=2 = rec+ 𝔹 (λ inl* → True) (λ inr* → False)
+1+1=2 = <> (f , g)
+  where f = rec+ 𝔹 (λ inl* → True) (λ inr* → False)
+        g = rec𝔹 (⊤ +' ⊤) (inl *) (inr *)
 \end{code}
 \end{minipage}
 \end{center}
-To clarify, this form of equivalence is called ``judmental equality''. We
-go over the three different forms of equivalence in the following section.
+For our purposes, we use the constructor {\tt <>} for constructing a term of
+the bijection type. For simplicity, we can define a bijection as a conjunction
+of two logical implications:
+\begin{center}
+\begin{minipage}{0.9\textwidth}
+\begin{code}
+data _↔_ (A B : Set) : Set where
+  <>_ : (A → B) × (B → A) → (A ↔ B)
+\end{code}
+\end{minipage}
+\end{center}
+To clarify, this form of equivalence is called ``judmental equality'' (i.e.,
+equality by logical bijection). We go over the three different forms of
+equivalence in the following section.
 
-
-%% x and Sigma
-
-\section{Example Types and Sample Proofs}
+\section{More Types and Sample Proofs}
 In this section, we present the type of Booleans, Natural numbers, Lists,
 and the identity type. To further understand these types, we also include
 a brief description of the different forms of equality, namely definitional,

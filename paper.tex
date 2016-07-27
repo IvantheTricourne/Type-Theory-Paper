@@ -61,7 +61,7 @@ which is why we first take the time to do familiarize ourselves with them
 Per Martin-L\"of \cite{}. For this, we recommend using a proof assistant, such
 as Agda. In our examples, we refer to Agda syntax rules. 
 
-\section{Dependent Types}
+\section{The World of Dependent Types}
 In this section, we introduce the concept of dependent types and their role in
 type theoretic systems. At their core, dependent types can be thought of simply
 as an \textit{interplay of types and terms}. To understand this relationship,
@@ -213,8 +213,10 @@ and {\tt B}. In a sense, a \(\Pi\)-type binds values for types just as
 
 \(\Pi\)-types are actually significantly more expressive than the ones in
 \(\lambda2\). In \(\lambda2\), they are constrained to be only parameterized
-over other types (e.g. {\tt Set} in {\tt ∀ (x : Set) → t}). In a later system, we
-allow \(\Pi\)-types to be parameterized over terms (e.g. {\tt ∀ (x : t) → t}).
+over other types (e.g. {\tt Set} in {\tt ∀ (x : Set) → t}).
+
+%% In a later system, we
+%% allow \(\Pi\)-types to be parameterized over terms (e.g. {\tt ∀ (x : t) → t}).
 
 So far, we've seen how terms can depend on other terms (STLC) and how terms can
 depend on types (term level polymoprhism). In the following system, we introduce
@@ -436,7 +438,7 @@ Reading the cube requires us to start on the edge marked \(\lambda\!\!\rightarro
 which corresponds to the STLC, the base system. From here, we can either move
 inwards, upwards, or rightwards, which corresponds to the extension to the other
 systems marked on the respective edges. Using these three movements, we
-eventually reach \(\lambda C\), leaving it in the {\em most powerful} position
+eventually reach \(\lambda C\), leaving it in the most powerful position
 on the cube.
 
 \section{Martin-L\"of Type Theory}
@@ -507,6 +509,9 @@ prop {A} perp = rec⊥ A perp
 
 prop' : {A : ⊥ → Set} → (x : ⊥) → A x
 prop' {A} perp = ind⊥ A perp
+
+absurd : ⊥ → (1 ≡ 2)
+absurd = rec⊥ (1 ≡ 2) 
 \end{code}
 \end{minipage}
 \end{center}
@@ -582,7 +587,8 @@ $$\forall (x : \top) \rightarrow x ≡ *$$
 That is, for every element of type \(\top\), that element is equivalent to {\tt *}.
 This second expression, {\it x ≡} {\tt *}, is an example of an {\it identity type},
 which we describe later on in this section. For now, we simply say that the
-sole constructor for the identity type is {\it refl x}, for all x.
+sole constructor for the identity type is {\tt (refl x)}, which is a proof that
+{\it x ≡ x}.
 
 Now, to prove the above proposition, we can use the induction principle for
 \(\top\), since the proposition we are trying to prove concerns all elements
@@ -597,7 +603,7 @@ uip⊤ = ind⊤ (λ top → top ≡ *) (refl *)
 \end{center}
 Here, we have taken our motive to be the expression {\tt (λ top → top ≡ *)},
 which essentially repeats the information already given by our type expression.
-The second element, {\tt refl *}, is a proof that our motive holds in the case that
+The second element, {\tt (refl *)}, is a proof that our motive holds in the case that
 {\tt top} is {\tt *} and is of type {\tt * ≡ *}.
 
 Alternatively, we could have written our proof as follows:
@@ -608,11 +614,15 @@ uip⊤ * = refl *
 \end{code}
 \end{minipage}
 \end{center}
-This form of proof uses pattern matching and essentially asserts that the only
-element in \(\top\) is {\tt *}, which greatly simplifies our proof. Both methods
-of proof are correct, but, in general, using pattern matching is only safe when
-the values of proof expressions are not dependent one another (i.e., their
-values don't change depending on which expression we apply pattern matching to).
+This form of proof uses pattern matching and asserts that the only element in
+\(\top\) is {\tt *}, which greatly simplifies our proof. Both methods of proof
+are correct, but, in general, using pattern matching is only safe when the
+values of proof expressions are not dependent one another (i.e., their values
+don't change depending on which expression we apply pattern matching to). This
+topic is formally known as {\it dependent pattern-matching}, which is a bit
+out of the scope of this paper. Thus, for our purposes, we refrain from using
+pattern matching in our proofs and instead use recursion and induction
+principles.
 
 Before we can do more proofs, we first introduce the disjunction type, +: 
 \begin{center}
@@ -703,36 +713,108 @@ To clarify, this form of equivalence is called ``judmental equality'' (i.e.,
 equality by logical bijection). We go over the three different forms of
 equivalence in the following section.
 
-\section{More Types and Sample Proofs}
-In this section, we present the type of Booleans, Natural numbers, Lists,
-and the identity type. To further understand these types, we also include
-a brief description of the different forms of equality, namely definitional,
-judgmental and propositional. In type theory, the specific differences
-between the three are generally misunderstood but are important in understanding
-basic type theoretic proof methods, which we also go into some detail in
-this section with several examples.
+\section{Equivalence and Sample Proofs}
+In this section, we present the type of Natural numbers, Lists, and the identity
+type. To further understand these types, we also include a brief description of
+the different forms of equality, namely definitional, judgmental and
+propositional. In type theory, the specific differences between the three are
+generally misunderstood but are important in understanding basic type theoretic
+proof methods, which we also go into some detail in this section with several
+examples.
 
 \subsection*{Equality}
 %% talk about definitional equality, judgmental equality, prop equality
+The first form of equality that is generally more familiar than the others.
+This form of equality is called {\it definitional equality} \cite{}. Simply put,
+definitional equality is equality through definition, which requires no proof.
+For example, we know that for any two natural numbers {\tt m} and {\tt n},
+{\tt m `plus` n} is equal to the sum of {\tt m} and {\tt n} by definition of
+{\tt `plus`}.
 
-\subsection*{Booleans}
+We have already briefly mentoined the second form of equality, judgmental
+equality \cite{}, which is equality by logical bijection. For example, if we
+have the propositions {\tt A} and {\tt B}, and from either {\tt A} or {\tt B} we
+can derive {\tt B} and {\tt A} respectively, then we can say that {\tt A} and
+{\tt B} are judgmentally equivalent. A proof of judgmental equality requires a
+proof similar to the one we have presented in the previous section for the
+proposition {\tt (⊤ + ⊤) ↔ 𝔹}.
+
+The final form of equivalence is quite a bit more complex than the previous two
+and requires a special kind of proof. Propositional equality is equality through
+an identity type (e.g. {\tt x ≡ y}). Thus, we now formally introduce the
+definition of the identity type:
+%% say something that this is the HoTT version of identity
+%% possibly also point out that the discrepancy between the two
+%% -- "PROPOSITIONAL EQUALITY"
+%% -- For a proposition, C, on a proof of x ≡ y for
+%% -- any x and y, if we can show that it holds for
+%% -- (refl x), then C holds for all proofs, p : x ≡ y.
+%% -- "STRICT EQUALITY"
+%% -- For a proposition, C, on a reflexive equality (x ≡ x),
+%% -- for any x, if we can show that it holds for (refl x), then
+%% -- C holds for all other reflexive equalities p : x ≡ x.
 \begin{center}
 \begin{minipage}{0.9\textwidth}
 \begin{code}
-data 𝔹 : Set where
-  True  : 𝔹
-  False : 𝔹
-
-rec𝔹 : (C : Set) → C → C → 𝔹 → C
-rec𝔹 C t f True = t
-rec𝔹 C t f False = f
-
-ind𝔹 : (C : 𝔹 → Set) → C True → C False → (x : 𝔹) → C x
-ind𝔹 C t f True = t
-ind𝔹 C t f False = f
+data _≡_ {A : Set} : (a b : A) → Set where
+  refl : (a : A) → (a ≡ a)
 \end{code}
 \end{minipage}
 \end{center}
+Out of all the types we have introduced, the identity type is the first type
+parameterized by terms (viz. {\tt a} and {\tt b}). Until now, we have only
+introduced types parameterized by other types. Types paramterized by terms are
+classified as an {\em indexed type} \cite{}. Essentially, if we think of types
+as shapes (i.e., we can think of them as circles containing points representing
+their terms), indexed types change their shape depending on which terms are
+passed to them. For example, it is not the case that {\tt y ≡ x} automatically
+comes from a proof of {\tt x ≡ y}. This requires a proof!
+
+Before we can prove this, however, we must first introduce the recursion and
+induction principles of the identity type. Unlike the other types we have
+previously introduced, the identity type has two induction principles, both of
+which have their own appropriate use case \cite{}:
+\begin{center}
+\begin{minipage}{0.9\textwidth}
+\begin{code}
+J : {A : Set} (C : {x y : A} → x ≡ y → Set) →
+    (∀ (x : A) → C (refl x)) →
+    {x y : A} (p : x ≡ y) → C p
+J C c (refl x) = c x
+
+K : {A : Set} (C : {x : A} → x ≡ x → Set) →
+    (∀ (x : A) → C (refl x)) →
+    {x : A} (p : x ≡ x) → C p
+K C c (refl x) = c x
+
+rec≡ : {A : Set} {x y : A} (C : A → Set) →
+       (p : x ≡ y) → C x → C y
+rec≡ {A} {x} {y} C = 
+  J (λ {x} {y} _ → C x → C y)
+    (λ x → λ z → z)
+    {x} {y} 
+\end{code}
+\end{minipage}
+\end{center}
+
+%% \subsection*{Booleans}
+%% \begin{center}
+%% \begin{minipage}{0.9\textwidth}
+%% \begin{code}
+%% data 𝔹 : Set where
+%%   True  : 𝔹
+%%   False : 𝔹
+
+%% rec𝔹 : (C : Set) → C → C → 𝔹 → C
+%% rec𝔹 C t f True = t
+%% rec𝔹 C t f False = f
+
+%% ind𝔹 : (C : 𝔹 → Set) → C True → C False → (x : 𝔹) → C x
+%% ind𝔹 C t f True = t
+%% ind𝔹 C t f False = f
+%% \end{code}
+%% \end{minipage}
+%% \end{center}
 
 \subsection*{Natural Numbers}
 \begin{center}
@@ -773,44 +855,6 @@ indList : {A : Set} → (C : List A → Set) → C Nil →
           (xs : List A) → C xs
 indList C c f Nil = c
 indList C c f (x :: xs) = f x xs (indList C c f xs)
-\end{code}
-\end{minipage}
-\end{center}
-
-\subsection*{Identity Types}
-%% say something that this is the HoTT version of identity
-%% possibly also point out that the discrepancy between the two
-\begin{center}
-\begin{minipage}{0.9\textwidth}
-\begin{code}
-infix  4  _≡_
-data _≡_ {ℓ} {A : Set ℓ} : (a b : A) → Set ℓ where
-  refl : (a : A) → (a ≡ a)
-
--- "PROPOSITIONAL EQUALITY"
--- For a proposition, C, on a proof of x ≡ y for
--- any x and y, if we can show that it holds for
--- (refl x), then C holds for all proofs, p : x ≡ y.
-J : {A : Set} (C : {x y : A} → x ≡ y → Set) →
-    (∀ (x : A) → C (refl x)) →
-    {x y : A} (p : x ≡ y) → C p
-J C c (refl x) = c x
-
--- "STRICT EQUALITY"
--- For a proposition, C, on a reflexive equality (x ≡ x),
--- for any x, if we can show that it holds for (refl x), then
--- C holds for all other reflexive equalities p : x ≡ x.
-K : {A : Set} (C : {x : A} → x ≡ x → Set) →
-    (∀ (x : A) → C (refl x)) →
-    {x : A} (p : x ≡ x) → C p
-K C c (refl x) = c x
-
-rec≡ : {A : Set} {x y : A} (C : A → Set) →
-       (p : x ≡ y) → C x → C y
-rec≡ {A} {x} {y} C = 
-  J (λ {x} {y} _ → C x → C y)
-    (λ x → λ z → z)
-    {x} {y} 
 \end{code}
 \end{minipage}
 \end{center}

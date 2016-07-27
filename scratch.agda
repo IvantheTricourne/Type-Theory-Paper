@@ -130,7 +130,7 @@ data _isEven : ℕ → Set where
 
 
 infix  4  _≡_
-data _≡_ {ℓ} {A : Set ℓ} : (a b : A) → Set ℓ where
+data _≡_ {A : Set} : (a b : A) → Set where
   refl : (a : A) → (a ≡ a)
 
 -- "PROPOSITIONAL EQUALITY"
@@ -138,8 +138,8 @@ data _≡_ {ℓ} {A : Set ℓ} : (a b : A) → Set ℓ where
 -- if we can show that it holds for (refl x), then
 -- C holds for all proofs, p, such that x ≡ y.
 J : {A : Set} (C : {x y : A} → x ≡ y → Set) →
-       (∀ (x : A) → C (refl x)) →
-       {x y : A} (p : x ≡ y) → C p
+    (∀ (x : A) → C (refl x)) →
+    {x y : A} (p : x ≡ y) → C p
 J C c (refl x) = c x
 
 -- "STRICT EQUALITY"
@@ -147,15 +147,15 @@ J C c (refl x) = c x
 -- if we can show that it holds for (refl x), then
 -- C holds for all other reflexive equalities p : x ≡ x.
 K : {A : Set} (C : {x : A} → x ≡ x → Set) →
-        (∀ (x : A) → C (refl x)) →
-        {x : A} (p : x ≡ x) → C p
+    (∀ (x : A) → C (refl x)) →
+    {x : A} (p : x ≡ x) → C p
 K C c (refl x) = c x
 
 rec≡ : {A : Set} {x y : A} (C : A → Set) →
        (p : x ≡ y) → C x → C y
 rec≡ {A} {x} {y} C = 
   J (λ {x} {y} _ → C x → C y)
-    (λ x → λ z → z)
+    (λ x z → z)
     {x} {y}
 
 
@@ -186,3 +186,6 @@ data _↔_ (A B : Set) : Set where
 1+1=2 = <> (1+1=2' , 1+1=2'')
   where 1+1=2'  = rec+ 𝔹 (λ inl* → True) (λ inr* → False)
         1+1=2'' = rec𝔹 (⊤ +' ⊤) (inl *) (inr *)
+
+absurd : ⊥ → (1 ≡ 2)
+absurd = rec⊥ (1 ≡ 2) 

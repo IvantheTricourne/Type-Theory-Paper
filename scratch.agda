@@ -159,6 +159,9 @@ rec≡ {A} {x} {y} C =
     {x} {y}
 
 
+sym_J : {A : Set} {x y : A} → x ≡ y → y ≡ x
+sym_J = J (λ {x y} x=y → y ≡ x) refl
+
 ⊤ᵤ : (x : ⊤) → x ≡ *
 -- ⊤ᵤ * = refl *
 ⊤ᵤ = ind⊤ (λ top → top ≡ *) (refl *)

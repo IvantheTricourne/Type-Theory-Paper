@@ -710,7 +710,7 @@ data _↔_ (A B : Set) : Set where
 \end{minipage}
 \end{center}
 To clarify, this form of equivalence is called ``judmental equality'' (i.e.,
-equality by logical bijection). We go over the three different forms of
+equality by logical bijection) \cite{}. We go over the three different forms of
 equivalence in the following section.
 
 \section{Equivalence and Sample Proofs}
@@ -724,17 +724,16 @@ examples.
 
 \subsection*{Equality}
 %% talk about definitional equality, judgmental equality, prop equality
-The first form of equality that is generally more familiar than the others.
-This form of equality is called {\it definitional equality} \cite{}. Simply put,
-definitional equality is equality through definition, which requires no proof.
-For example, we know that for any two natural numbers {\tt m} and {\tt n},
-{\tt m `plus` n} is equal to the sum of {\tt m} and {\tt n} by definition of
-{\tt `plus`}.
+The first form of equality is much simpler than the others. This form of
+equality is called {\it definitional equality} \cite{}. Simply put, definitional
+equality is equality through definition, which requires no proof. For example,
+we know that for any two natural numbers {\tt m} and {\tt n}, {\tt m `plus` n}
+is equal to the sum of {\tt m} and {\tt n} by definition of {\tt `plus`}.
 
-We have already briefly mentoined the second form of equality, judgmental
-equality \cite{}, which is equality by logical bijection. For example, if we
-have the propositions {\tt A} and {\tt B}, and from either {\tt A} or {\tt B} we
-can derive {\tt B} and {\tt A} respectively, then we can say that {\tt A} and
+We have already briefly mentioned the second form of equality, judgmental
+equality, which is equality by logical bijection. For example, if we have the
+propositions {\tt A} and {\tt B}, and from either {\tt A} or {\tt B} we can
+derive {\tt B} and {\tt A} respectively, then we can say that {\tt A} and
 {\tt B} are judgmentally equivalent. A proof of judgmental equality requires a
 proof similar to the one we have presented in the previous section for the
 proposition {\tt (⊤ + ⊤) ↔ 𝔹}.
@@ -763,12 +762,13 @@ data _≡_ {A : Set} : (a b : A) → Set where
 \end{center}
 Out of all the types we have introduced, the identity type is the first type
 parameterized by terms (viz. {\tt a} and {\tt b}). Until now, we have only
-introduced types parameterized by other types. Types paramterized by terms are
-classified as an {\em indexed type} \cite{}. Essentially, if we think of types
+introduced types parameterized by other types. Types parameterized by terms are
+classified as an {\em indexed types} \cite{}. Essentially, if we think of types
 as shapes (i.e., we can think of them as circles containing points representing
 their terms), indexed types change their shape depending on which terms are
 passed to them. For example, it is not the case that {\tt y ≡ x} automatically
-comes from a proof of {\tt x ≡ y}. This requires a proof!
+comes from a proof of {\tt x ≡ y}. This requires a proof of the symmetry of
+identity types.
 
 Before we can prove this, however, we must first introduce the recursion and
 induction principles of the identity type. Unlike the other types we have
@@ -793,6 +793,52 @@ rec≡ {A} {x} {y} C =
   J (λ {x} {y} _ → C x → C y)
     (λ x → λ z → z)
     {x} {y} 
+\end{code}
+\end{minipage}
+\end{center}
+The two induction principles of the identity type (viz. {\tt J} and {\tt K})
+refer to the two ways in which an identity type can be used in a proof, where
+{\tt J} is more general. This simply means that {\tt J} can be used for a wider
+variety of proofs concerning identity types.
+
+At first glance, the difference between the two induction principles is clear
+when looking at the {\tt C} parameter in both. In {\tt J}, {\tt C} is
+parameterized with two possibly distinct terms (viz. {\tt x} and {\tt y}),
+whereas {\tt K} only mentions one, {\tt x}. This distinction is what allows
+{\tt J} to be used for {\em special} identity proofs, that is, in proofs
+for identity types of more complex forms of equality (i.e., propositional
+equality).
+
+As an example, let's prove the symmetry of identity types using {\tt J}:
+\begin{center}
+\begin{minipage}{0.9\textwidth}
+\begin{code}
+sym_J : {A : Set} {x y : A} → x ≡ y → y ≡ x
+sym_J = J ? ?
+\end{code}
+\end{minipage}
+\end{center}
+Now, we must fill in both instances of {\tt ?} in the above proof. Similar to
+previous proofs, the first of these is our motive and is simply a restatement of
+our type statement. In these forms of proofs, we commonly annotate parameterized
+identity types with their given equality (viz. {\tt x=y}):
+\begin{center}
+\begin{minipage}{0.9\textwidth}
+\begin{code}
+sym_J : {A : Set} {x y : A} → x ≡ y → y ≡ x
+sym_J = J (λ {x y} x=y → y ≡ x) ?
+\end{code}
+\end{minipage}
+\end{center}
+Now, the last {\tt ?} must be filled in with a proof that our motive holds in
+the case that {\tt y} is {\tt x}, that is, we must prove that
+{\tt (x : A) → x ≡ x}, which is the type of {\tt refl}. Thus, our completed
+proof is the following:
+\begin{center}
+\begin{minipage}{0.9\textwidth}
+\begin{code}
+sym_J : {A : Set} {x y : A} → x ≡ y → y ≡ x
+sym_J = J (λ {x y} x=y → y ≡ x) refl
 \end{code}
 \end{minipage}
 \end{center}

@@ -713,7 +713,7 @@ To clarify, this form of equivalence is called ``judmental equality'' (i.e.,
 equality by logical bijection) \cite{}. We go over the three different forms of
 equivalence in the following section.
 
-\section{Equivalence and Sample Proofs}
+\section{Equivalence and Other Types}
 In this section, we present the type of Natural numbers, Lists, and the identity
 type. To further understand these types, we also include a brief description of
 the different forms of equality, namely definitional, judgmental and
@@ -722,7 +722,7 @@ generally misunderstood but are important in understanding basic type theoretic
 proof methods, which we also go into some detail in this section with several
 examples.
 
-\subsection*{Equality}
+\subsection*{Equality and Identity Types}
 %% talk about definitional equality, judgmental equality, prop equality
 The first form of equality is much simpler than the others. This form of
 equality is called {\it definitional equality} \cite{}. Simply put, definitional
@@ -741,7 +741,7 @@ proposition {\tt (⊤ + ⊤) ↔ 𝔹}.
 The final form of equivalence is quite a bit more complex than the previous two
 and requires a special kind of proof. Propositional equality is equality through
 an identity type (e.g. {\tt x ≡ y}). Thus, we now formally introduce the
-definition of the identity type:
+definition of the identity type.
 %% say something that this is the HoTT version of identity
 %% possibly also point out that the discrepancy between the two
 %% -- "PROPOSITIONAL EQUALITY"
@@ -771,9 +771,7 @@ comes from a proof of {\tt x ≡ y}. This requires a proof of the symmetry of
 identity types.
 
 Before we can prove this, however, we must first introduce the recursion and
-induction principles of the identity type. Unlike the other types we have
-previously introduced, the identity type has two induction principles, both of
-which have their own appropriate use case \cite{}:
+induction principles of the identity type:
 \begin{center}
 \begin{minipage}{0.9\textwidth}
 \begin{code}
@@ -781,11 +779,6 @@ J : {A : Set} (C : {x y : A} → x ≡ y → Set) →
     (∀ (x : A) → C (refl x)) →
     {x y : A} (p : x ≡ y) → C p
 J C c (refl x) = c x
-
-K : {A : Set} (C : {x : A} → x ≡ x → Set) →
-    (∀ (x : A) → C (refl x)) →
-    {x : A} (p : x ≡ x) → C p
-K C c (refl x) = c x
 
 rec≡ : {A : Set} {x y : A} (C : A → Set) →
        (p : x ≡ y) → C x → C y
@@ -796,37 +789,42 @@ rec≡ {A} {x} {y} C =
 \end{code}
 \end{minipage}
 \end{center}
-The two induction principles of the identity type (viz. {\tt J} and {\tt K})
-refer to the two ways in which an identity type can be used in a proof, where
-{\tt J} is more general. This simply means that {\tt J} can be used for a wider
-variety of proofs concerning identity types.
+The more general induction principle for identity types is called {\tt J}.
+Later, we discuss a simpler, yet more restricted version. For now, we take
+the time to introduce the more general version which is applicable to every
+possible identity type \cite{}.
 
-At first glance, the difference between the two induction principles is clear
-when looking at the {\tt C} parameter in both. In {\tt J}, {\tt C} is
-parameterized with two possibly distinct terms (viz. {\tt x} and {\tt y}),
-whereas {\tt K} only mentions one, {\tt x}. This distinction is what allows
-{\tt J} to be used for {\em special} identity proofs, that is, in proofs
-for identity types of more complex forms of equality (i.e., propositional
-equality).
+Since identity types are parameterized over two terms, naturally, the motive
+parameter (viz. {\tt C}) of their induction principle is also parameterized
+by terms (viz. {\tt x} and {\tt y}). The simple reading of {\tt J} is read
+similar to other induction principles: given a proposition, {\tt C}, on an
+arbitrary identity type, if we can prove that {\tt C} holds for {\tt refl x},
+for all {\tt x}, then {\tt C} holds for all identity types. This becomes a bit
+more intuitive when we think of what a proof of equality entails: if we want
+to prove something for a proof of equality, it suffices to prove it for the
+simplest form of equality (i.e., a reflexive equality, {\tt refl}). One can
+also note the similarities between {\tt J} and the induction principle for
+{\tt ⊤}, since these types both have a single constructor (i.e., {\tt refl}
+and {\tt *}, respectively).
 
-As an example, let's prove the symmetry of identity types using {\tt J}:
+Now, let's prove the symmetry of identity types using {\tt J}:
 \begin{center}
 \begin{minipage}{0.9\textwidth}
 \begin{code}
-sym_J : {A : Set} {x y : A} → x ≡ y → y ≡ x
-sym_J = J ? ?
+sym : {A : Set} {x y : A} → x ≡ y → y ≡ x
+sym = J ? ?
 \end{code}
 \end{minipage}
 \end{center}
-Now, we must fill in both instances of {\tt ?} in the above proof. Similar to
+Next, we must fill in both instances of {\tt ?} in the above proof. Similar to
 previous proofs, the first of these is our motive and is simply a restatement of
 our type statement. In these forms of proofs, we commonly annotate parameterized
 identity types with their given equality (viz. {\tt x=y}):
 \begin{center}
 \begin{minipage}{0.9\textwidth}
 \begin{code}
-sym_J : {A : Set} {x y : A} → x ≡ y → y ≡ x
-sym_J = J (λ {x y} x=y → y ≡ x) ?
+sym : {A : Set} {x y : A} → x ≡ y → y ≡ x
+sym = J (λ {x y} x=y → y ≡ x) ?
 \end{code}
 \end{minipage}
 \end{center}
@@ -837,30 +835,26 @@ proof is the following:
 \begin{center}
 \begin{minipage}{0.9\textwidth}
 \begin{code}
-sym_J : {A : Set} {x y : A} → x ≡ y → y ≡ x
-sym_J = J (λ {x y} x=y → y ≡ x) refl
+sym : {A : Set} {x y : A} → x ≡ y → y ≡ x
+sym = J (λ {x y} x=y → y ≡ x) refl
 \end{code}
 \end{minipage}
 \end{center}
+To reiterate, this is an example of propositional equality. If this were a
+definitional or judgmental equality, we would not need to prove symmetry, since
+these two forms of equality are automatically reflexive, symmetric, associative,
+and transitive. This is the primary and most important difference between other
+forms of equality and propositional equality.
 
-%% \subsection*{Booleans}
-%% \begin{center}
-%% \begin{minipage}{0.9\textwidth}
-%% \begin{code}
-%% data 𝔹 : Set where
-%%   True  : 𝔹
-%%   False : 𝔹
+A curious fact about {\tt J} is that it does not lend itself to a uniqueness of
+identity proof, UIP. In fact, for many reasons, this is actually beneficial and
+allows the identity type to be used outside of simple proofs of equality \cite{}.
+We discuss this in the final section of this paper and compare {\tt J}
+side-by-side with another, less general induction principle for identity types.
 
-%% rec𝔹 : (C : Set) → C → C → 𝔹 → C
-%% rec𝔹 C t f True = t
-%% rec𝔹 C t f False = f
-
-%% ind𝔹 : (C : 𝔹 → Set) → C True → C False → (x : 𝔹) → C x
-%% ind𝔹 C t f True = t
-%% ind𝔹 C t f False = f
-%% \end{code}
-%% \end{minipage}
-%% \end{center}
+\subsection*{Other types}
+We now simply provide the remaining types for Natural numbers and lists. With
+what we have discussed, these types should not require much explanation.
 
 \subsection*{Natural Numbers}
 \begin{center}
@@ -905,8 +899,48 @@ indList C c f (x :: xs) = f x xs (indList C c f xs)
 \end{minipage}
 \end{center}
 
-\section{Discussion}
-Say a few things about the paper.
+\section{Exercises}
+We have now seen and discussed all the types necessary to start proving more
+complex proofs. As an exercise to the reader, we include a list of propositions
+to prove. We invite the reader to use only the appropriate induction and
+recursion principles in each proof. It helps to first attempt to prove these
+propositions using simple pattern matching. As a hint, use a recursion principle
+when the proof behaves like a simple function (i.e., defining {\tt `plus`}) and
+induction principle when proving propositions {\tt C} for all terms of a given
+type (i.e., like {\tt sym}).
+
+\begin{center}
+\begin{minipage}{0.9\textwidth}
+\begin{code}
+-- Identity Types
+congruence : {A : Set} {x y : A} (P : A → Set) →
+             (p : x ≡ y) → P x → P y
+transitivity : {A : Set} {x y z : A} → (x ≡ y) →
+               (y ≡ z) → (x ≡ z)
+
+-- Natural numbers (requires the above)
+plus : ℕ → ℕ → ℕ
+plus-left-unit : (i : ℕ) → plus 0 i ≡ i
+plus-right-unit : (i : ℕ) → plus i 0 ≡ i
+plus-successor : (i j : ℕ) → plus (suc i) j ≡ plus i (suc j)
+plus-commutativity : (i j : ℕ) → plus i j ≡ plus j i
+plus-associativity : (x y z : ℕ) →
+                     plus x (plus y z) ≡ plus (plus x y) z
+
+-- Lists
+_++_ : {A : Set} → List A → List A → List A
+reverse : {A : Set} → List A → List A
+append-left-unit : {A : Set} (xs : List A) → Nil ++ xs ≡ xs
+append-right-unit : {A : Set} (xs : List A) → xs ++ Nil ≡ xs
+append-associativity : {A : Set} (xs ys zs : List A) →
+                       xs ++ (ys ++ zs) ≡ (xs ++ ys) ++ zs
+append-distributivity : {A : Set} (xs ys : List A) →
+                        reverse (xs ++ ys) ≡ (reverse ys) ++ (reverse xs) 
+double-reverse : {A : Set} (xs : List A) → reverse (reverse xs) ≡ xs
+
+\end{code}
+\end{minipage}
+\end{center}
 
 \subsection*{Extension to Homotopy Type Theory (maybe)}
 

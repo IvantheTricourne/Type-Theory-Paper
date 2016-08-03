@@ -113,6 +113,14 @@ indℕ : (C : ℕ → Set) → C 0 →
 indℕ C c _ 0 = c
 indℕ C c f (suc n) = f n (indℕ C c f n)
 
+-- plus : ℕ → ℕ → ℕ
+-- plus = ?
+-- plus-left-unit : (i : ℕ) → plus 0 i ≡ i
+-- plus-left-unit = ?
+-- plus-right-unit : (i : ℕ) → plus i 0 ≡ i
+-- plus-right-unit = ?
+
+
 const : ℕ → 𝔹 → ℕ
 const = λ n b → n
 
@@ -192,3 +200,56 @@ data _↔_ (A B : Set) : Set where
 
 absurd : ⊥ → (1 ≡ 2)
 absurd = rec⊥ (1 ≡ 2) 
+
+
+
+
+-- exercises
+plus : ℕ → ℕ → ℕ
+plus = recℕ (ℕ → ℕ) (λ n → n) (λ m r n → suc (r n))
+
+plus-left-unit : (i : ℕ) → plus 0 i ≡ i
+plus-left-unit = 
+  indℕ (λ i → plus 0 i ≡ i)
+        (refl zero)
+        (λ x _ → refl (suc x))
+
+plus-right-unit : (i : ℕ) → plus i 0 ≡ i
+plus-right-unit = 
+  indℕ (λ i → plus i 0 ≡ i)
+       (refl zero)
+       (λ i x+0=x → {!!})
+
+plus-associativity : (x y z : ℕ) → plus x (plus y z) ≡ plus (plus x y) z
+plus-associativity = {!!}
+
+transport : {A : Set} {x y : A} (P : A → Set) →
+            (p : x ≡ y) → P x → P y
+transport {A} {x} {y} P p = 
+  J -- on p
+    (λ {x} {y} p → (P x → P y))
+    (λ _ → λ z → z)
+    {x} {y} p
+
+_++_ : {A : Set} → List A → List A → List A
+xs ++ ys = {!!}
+
+reverse : {A : Set} → List A → List A
+reverse = {!!}
+
+append-left-unit : {A : Set} (xs : List A) → Nil ++ xs ≡ xs
+append-left-unit = {!!}
+
+append-right-unit : {A : Set} (xs : List A) → xs ++ Nil ≡ xs
+append-right-unit = {!!}
+
+append-associativity : {A : Set} (xs ys zs : List A) →
+                       xs ++ (ys ++ zs) ≡ (xs ++ ys) ++ zs
+append-associativity = {!!}
+
+append-distributivity : {A : Set} (xs ys : List A) →
+                        reverse (xs ++ ys) ≡ (reverse ys) ++ (reverse xs) 
+append-distributivity = {!!}
+
+double-reverse : {A : Set} (xs : List A) → reverse (reverse xs) ≡ xs
+double-reverse = {!!}

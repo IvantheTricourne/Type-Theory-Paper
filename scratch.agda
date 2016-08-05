@@ -202,25 +202,30 @@ absurd : ⊥ → (1 ≡ 2)
 absurd = rec⊥ (1 ≡ 2) 
 
 
-
+congruence : {A : Set} {x y : A} (P : A → Set) →
+             (p : x ≡ y) → P x → P y
+congruence P = 
+  J (λ {x y} x=y → P x → P y)
+    (λ x px → px)
 
 -- exercises
-plus : ℕ → ℕ → ℕ
-plus = recℕ (ℕ → ℕ) (λ n → n) (λ m r n → suc (r n))
+_plus_ : ℕ → ℕ → ℕ
+m plus n = f m n where
+  f = recℕ (ℕ → ℕ) (λ n → n) (λ m r n → suc (r n))
 
-plus-left-unit : (i : ℕ) → plus 0 i ≡ i
+plus-left-unit : (i : ℕ) → 0 plus i ≡ i
 plus-left-unit = 
-  indℕ (λ i → plus 0 i ≡ i)
+  indℕ (λ i → 0 plus i ≡ i)
         (refl zero)
         (λ x _ → refl (suc x))
 
-plus-right-unit : (i : ℕ) → plus i 0 ≡ i
-plus-right-unit = 
-  indℕ (λ i → plus i 0 ≡ i)
-       (refl zero)
-       (λ i x+0=x → {!!})
+-- plus-right-unit : (i : ℕ) → plus i 0 ≡ i
+-- plus-right-unit = 
+--   indℕ (λ i → plus i 0 ≡ i)
+--        (refl zero)
+--        (λ i x+0=x → {!!})
 
-plus-associativity : (x y z : ℕ) → plus x (plus y z) ≡ plus (plus x y) z
+plus-associativity : (x y z : ℕ) → x plus (y plus z) ≡ (x plus y) plus z
 plus-associativity = {!!}
 
 transport : {A : Set} {x y : A} (P : A → Set) →
@@ -231,8 +236,14 @@ transport {A} {x} {y} P p =
     (λ _ → λ z → z)
     {x} {y} p
 
+
+
 _++_ : {A : Set} → List A → List A → List A
-xs ++ ys = {!!}
+_++_ = append where
+  append : {A : Set} → List A → List A → List A
+  append {A} = recList (List A → List A)
+                       (λ ys → ys)
+                       (λ a xs f ys → a :: (f ys))
 
 reverse : {A : Set} → List A → List A
 reverse = {!!}

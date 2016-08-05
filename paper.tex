@@ -924,7 +924,8 @@ recursion principles in each proof. It helps to first attempt to prove these
 propositions using simple pattern matching. As a hint, use a recursion principle
 when the proof behaves like a simple function (i.e., defining {\tt `plus`}) and
 induction principle when proving propositions {\tt C} for all terms of a given
-type (i.e., like {\tt sym}).
+type (i.e., like {\tt sym}). As an example, the first proof of each set of
+proofs is provided:
 
 \begin{center}
 \begin{minipage}{0.9\textwidth}
@@ -932,20 +933,50 @@ type (i.e., like {\tt sym}).
 -- Identity Types
 congruence : {A : Set} {x y : A} (P : A → Set) →
              (p : x ≡ y) → P x → P y
+congruence P = 
+  J (λ {x y} x=y → P x → P y)
+    (λ x px → px)
+
 transitivity : {A : Set} {x y z : A} → (x ≡ y) →
                (y ≡ z) → (x ≡ z)
+\end{code}
+\end{minipage}
+\end{center}
 
+\begin{center}
+\begin{minipage}{0.9\textwidth}
+\begin{code}
 -- Natural numbers (requires the above)
 _plus_ : ℕ → ℕ → ℕ
+m plus n = f m n where
+  f = recℕ (ℕ → ℕ) (λ n → n) (λ m r n → suc (r n))
+
 plus-left-unit : (i : ℕ) → 0 plus i ≡ i
+plus-left-unit = 
+  indℕ (λ i → 0 plus i ≡ i)
+        (refl zero)
+        (λ x _ → refl (suc x))
+
 plus-right-unit : (i : ℕ) → i plus 0 ≡ i
 plus-successor : (i j : ℕ) → (suc i) plus j ≡ i plus (suc j)
 plus-commutativity : (i j : ℕ) → i plus j ≡ j plus i
 plus-associativity : (x y z : ℕ) →
                      x plus (y plus z) ≡ (x plus y) plus z
+\end{code}
+\end{minipage}
+\end{center}
 
+\begin{center}
+\begin{minipage}{0.9\textwidth}
+\begin{code}
 -- Lists
 _++_ : {A : Set} → List A → List A → List A
+_++_ = append where
+  append : {A : Set} → List A → List A → List A
+  append {A} = recList (List A → List A)
+                       (λ ys → ys)
+                       (λ a xs f ys → a :: (f ys))
+
 reverse : {A : Set} → List A → List A
 append-left-unit : {A : Set} (xs : List A) → Nil ++ xs ≡ xs
 append-right-unit : {A : Set} (xs : List A) → xs ++ Nil ≡ xs
@@ -954,7 +985,6 @@ append-associativity : {A : Set} (xs ys zs : List A) →
 append-distributivity : {A : Set} (xs ys : List A) →
                         reverse (xs ++ ys) ≡ (reverse ys) ++ (reverse xs) 
 double-reverse : {A : Set} (xs : List A) → reverse (reverse xs) ≡ xs
-
 \end{code}
 \end{minipage}
 \end{center}

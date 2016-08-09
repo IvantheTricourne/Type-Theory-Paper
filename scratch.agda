@@ -159,6 +159,11 @@ K : {A : Set} (C : {x : A} → x ≡ x → Set) →
     {x : A} (p : x ≡ x) → C p
 K C c (refl x) = c x
 
+UIP≡ : {A : Set} {x : A} (p : x ≡ x) → p ≡ (refl x)
+UIP≡ =
+  -- K (λ {x} x=x → x=x ≡ (refl x))
+  --   (λ x → refl (refl x)) 
+
 rec≡ : {A : Set} {x y : A} (C : A → Set) →
        (p : x ≡ y) → C x → C y
 rec≡ {A} {x} {y} C = 

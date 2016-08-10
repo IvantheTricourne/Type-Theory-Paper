@@ -939,6 +939,8 @@ congruence P =
   J (λ {x y} x=y → P x → P y)
     (λ x px → px)
 
+ap : {A : Set} {B : Set} (f : A → B) →
+     {x y : A} → (x ≡ y) → (f x ≡ f y)
 transitivity : {A : Set} {x y z : A} → (x ≡ y) →
                (y ≡ z) → (x ≡ z)
 \end{code}
@@ -979,23 +981,23 @@ _++_ = append where
                        (λ ys → ys)
                        (λ a xs f ys → a :: (f ys))
 
-reverse : {A : Set} → List A → List A
+rev : {A : Set} → List A → List A
 append-left-unit : {A : Set} (xs : List A) → Nil ++ xs ≡ xs
 append-right-unit : {A : Set} (xs : List A) → xs ++ Nil ≡ xs
 append-associativity : {A : Set} (xs ys zs : List A) →
                        xs ++ (ys ++ zs) ≡ (xs ++ ys) ++ zs
 append-distributivity : {A : Set} (xs ys : List A) →
-                        reverse (xs ++ ys) ≡ (reverse ys) ++ (reverse xs) 
-double-reverse : {A : Set} (xs : List A) → reverse (reverse xs) ≡ xs
+                        rev (xs ++ ys) ≡ (rev ys) ++ (rev xs) 
+double-rev : {A : Set} (xs : List A) → rev (rev xs) ≡ xs
 \end{code}
 \end{minipage}
 \end{center}
 
-\subsection*{Extension to Homotopy Type Theory (maybe)}
+\subsection*{A little more on Identity Types}
 Earlier, we briefly discussed how types can be viewed as shapes, with their
-respective terms consequently viewable as points contained with shapes. This
-concept is important in understanding another way to view the concepts of type
-theory: {\em homotopy type theory} (HoTT).
+respective terms viewable as points contained within them. This view of types
+is important in understanding another way to apply type theory:
+{\em homotopy type theory} (HoTT).
 
 In fact, a lot of what HoTT seeks to do stems directly from a single concept in
 regular type theory: the induction principle of identity types! This is why we
@@ -1014,7 +1016,7 @@ K C c (refl x) = c x
 \end{center}
 {\tt K} is similar to {\tt J} but asserts that the only proof of equality is
 {\tt refl} (i.e., the only equality is reflexive equality). In fact, we can
-prove this using {\tt K}:
+this concept using {\tt K}:
 \begin{center}
 \begin{minipage}{0.9\textwidth}
 \begin{code}
@@ -1025,13 +1027,52 @@ UIP≡ =
 \end{code}
 \end{minipage}
 \end{center}
-As we mentioned earlier, we cannot prove UIP for identity types using {\tt J},
-since the identity type passed to {\tt J} is parameterized over two possibly
-different terms, while {\tt K} only applies to reflexive proofs of equality.
-In some cases, {\tt K} might be all that one would need to do a given number
-of proofs concerning identity types, however, it limits the overall application
-and expressivity of identity types.
+As we mentioned earlier, we cannot prove {\tt UIP≡} using {\tt J}, since the
+identity type passed to {\tt J} is parameterized over two possibly different
+terms, while {\tt K} only applies to reflexive proofs of equality. Another way
+to think of this is that {\tt J} applies to all two terms that are proven equal
+{\em in some way}, while {\tt K} can only be used for terms that either
+reducible to each other or are, in some way, the same. In some cases, {\tt K}
+might be all that one would need to do a given number of proofs concerning
+identity types, however, it limits the overall application and expressivity of
+identity types.
+
+In HoTT, identity types are interpretted rather differently than in regular type
+theory. In HoTT, identity types correspond to {\em topological paths} that
+connect two elements. Here, we say {\em elements} because these paths can
+connect points, paths, paths of paths, etc. Another way to say this is that HoTT
+has the ability to reason about the {\em equality of equalities}. This is the
+reason for complexity of {\tt J} and is also the reason why {\tt K} is not
+applicable to HoTT.
+
+To end our brief discussion on identity types, it helps to further to solidify
+the concept of how identity types can be interpretted as topological paths in
+HoTT. For simplicity, we show how all the methods in which we can interact with
+an identity type correspond to a way one could think of interacting with a path.
+\begin{center}
+\begin{minipage}{0.9\textwidth}
+\begin{code}
+Identity Type → Path
+
+J → path induction
+symmetry → path inverse
+ap → function application on paths
+congruence → proposition interaction on paths
+transitiviy → path concatenation
+\end{code}
+\end{minipage}
+\end{center}
 
 \subsection*{Conclusion and Acknowledgments}
+At its core, the main purpose of type theory is to propose a new way of doing
+mathematics. The main benefit of choosing to do so stems from the close
+connection between types, constructive logic and the field of computer science.
+Thus, through simple act of type checking, which was made possible due in part
+to type theory being founded on the STLC, proofs and programs can now be
+verified and corrected with the help of a computer equipped with a proof
+assistant, which has given both mathematics and computer science the powerful
+concept of {\em proof verification}.
 
+I would like to thank Daniel P. Friedman for guiding me as I explored the world
+of types and type theory. 
 \end{document}

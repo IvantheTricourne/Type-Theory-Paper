@@ -161,8 +161,8 @@ K C c (refl x) = c x
 
 UIP≡ : {A : Set} {x : A} (p : x ≡ x) → p ≡ (refl x)
 UIP≡ =
-  -- K (λ {x} x=x → x=x ≡ (refl x))
-  --   (λ x → refl (refl x)) 
+  K (λ {x} x=x → x=x ≡ (refl x))
+    (λ x → refl (refl x)) 
 
 rec≡ : {A : Set} {x y : A} (C : A → Set) →
        (p : x ≡ y) → C x → C y
@@ -212,6 +212,12 @@ congruence : {A : Set} {x y : A} (P : A → Set) →
 congruence P = 
   J (λ {x y} x=y → P x → P y)
     (λ x px → px)
+
+ap : {A : Set} {B : Set} (f : A → B) →
+     {x y : A} → (x ≡ y) → (f x ≡ f y)
+ap f = 
+  J (λ {x} {y} p → f x ≡ f y) 
+    (λ x → refl (f x))
 
 -- exercises
 _plus_ : ℕ → ℕ → ℕ
@@ -269,3 +275,16 @@ append-distributivity = {!!}
 
 double-reverse : {A : Set} (xs : List A) → reverse (reverse xs) ≡ xs
 double-reverse = {!!}
+
+{- Path stuff
+Identity Type → Path
+
+J → path induction
+symmetry → path inverse
+ap → function application on paths
+congruence → propositions on paths
+transitiviy → path concatenation
+
+
+
+-}
